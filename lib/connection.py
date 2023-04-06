@@ -70,9 +70,9 @@ class Conexion:
         for row in self.cursor.fetchall():
             lista.append(list(row))
         for row in lista:
-            self.cursor.execute(f'SELECT count(corr_cia_acto) FROM asistencia INNER JOIN actos a on asistencia.corr_cia_acto = a.corr_cia WHERE MONTHNAME(a.fecha) = "{month}" AND YEAR(a.fecha) = {year} and reg_gral_voluntario = "{row[0]}"')
+            self.cursor.execute(f'SELECT count(corr_cia_acto) FROM asistencia INNER JOIN actos a on asistencia.corr_cia_acto = a.corr_cia WHERE MONTHNAME(a.fecha) = "{month}" AND YEAR(a.fecha) = {year} and reg_gral_voluntario = "{row[0]}" AND NOT (a.acto in ("C. ADM.","J. OFF", "CONS. DISC"))')
             lista[lista.index(row)].append(self.cursor.fetchall()[0][0])
-            self.cursor.execute(f'SELECT count(corr_cia) FROM actos WHERE MONTHNAME(fecha) = "{month}" AND YEAR (fecha) = {year}')
+            self.cursor.execute(f'SELECT count(corr_cia) FROM actos WHERE MONTHNAME(fecha) = "{month}" AND YEAR (fecha) = {year} AND NOT (acto in ("C. ADM.","J. OFF", "CONS. DISC"))')
             lista[lista.index(row)].append(row[4] / self.cursor.fetchall()[0][0])
             self.cursor.execute(f'SELECT count(corr_cia_acto) FROM asistencia INNER JOIN actos a on asistencia.corr_cia_acto = a.corr_cia WHERE MONTHNAME(a.fecha) = "{month}" AND YEAR(a.fecha) = {year} and reg_gral_voluntario = "{row[0]}" AND a.lista = "OB"')
             lista[lista.index(row)].append(self.cursor.fetchall()[0][0])
@@ -141,9 +141,8 @@ class Conexion:
             f"SELECT avg(c_vols) FROM actos WHERE MONTHNAME(fecha) = '{month}' AND YEAR(fecha) = {year} AND (acto = 'DESFILE CB' OR acto = 'ROMERIA CB' or acto = 'SS. SOL. CB')")
         estadistica.append(['PROMEDIO ASISTENCIA CITACIONES CBPA', self.cursor.fetchone()[0]])
         # Asistencia General
-        # Asistencia Academias
         self.cursor.execute(
-            f"SELECT avg(c_vols) FROM actos WHERE MONTHNAME(fecha) = '{month}' AND YEAR(fecha) = {year}")
+            f"SELECT avg(c_vols) FROM actos WHERE MONTHNAME(fecha) = '{month}' AND YEAR(fecha) = {year} AND NOT (acto in ('C. ADM.','J. OFF', 'CONS. DISC'))")
         estadistica.append(['PROMEDIO ASISTENCIA GENERAL', self.cursor.fetchone()[0]])
 
 
@@ -156,9 +155,9 @@ class Conexion:
         for row in self.cursor.fetchall():
             lista.append(list(row))
         for row in lista:
-            self.cursor.execute(f'SELECT count(corr_cia_acto) FROM asistencia INNER JOIN actos a on asistencia.corr_cia_acto = a.corr_cia WHERE fecha BETWEEN STR_TO_DATE("{fDesde}", "%d-%m-%Y") AND STR_TO_DATE("{fHasta}", "%d-%m-%Y") and reg_gral_voluntario = "{row[0]}"')
+            self.cursor.execute(f'SELECT count(corr_cia_acto) FROM asistencia INNER JOIN actos a on asistencia.corr_cia_acto = a.corr_cia WHERE fecha BETWEEN STR_TO_DATE("{fDesde}", "%d-%m-%Y") AND STR_TO_DATE("{fHasta}", "%d-%m-%Y") and reg_gral_voluntario = "{row[0]}" AND NOT (a.acto in ("C. ADM.","J. OFF", "CONS. DISC"))')
             lista[lista.index(row)].append(self.cursor.fetchall()[0][0])
-            self.cursor.execute(f'SELECT count(corr_cia) FROM actos WHERE fecha BETWEEN STR_TO_DATE("{fDesde}", "%d-%m-%Y") AND STR_TO_DATE("{fHasta}", "%d-%m-%Y")')
+            self.cursor.execute(f'SELECT count(corr_cia) FROM actos WHERE fecha BETWEEN STR_TO_DATE("{fDesde}", "%d-%m-%Y") AND STR_TO_DATE("{fHasta}", "%d-%m-%Y") AND NOT (acto in ("C. ADM.","J. OFF", "CONS. DISC"))')
             lista[lista.index(row)].append(row[4] / self.cursor.fetchall()[0][0])
             self.cursor.execute(f'SELECT count(corr_cia_acto) FROM asistencia INNER JOIN actos a on asistencia.corr_cia_acto = a.corr_cia WHERE fecha BETWEEN STR_TO_DATE("{fDesde}", "%d-%m-%Y") AND STR_TO_DATE("{fHasta}", "%d-%m-%Y") and reg_gral_voluntario = "{row[0]}" AND a.lista = "OB"')
             lista[lista.index(row)].append(self.cursor.fetchall()[0][0])
@@ -228,9 +227,8 @@ class Conexion:
             f"SELECT avg(c_vols) FROM actos WHERE fecha BETWEEN STR_TO_DATE('{fDesde}', '%d-%m-%Y') AND STR_TO_DATE('{fHasta}', '%d-%m-%Y') AND (acto = 'DESFILE CB' OR acto = 'ROMERIA CB' or acto = 'SS. EE. CB')")
         estadistica.append(['PROMEDIO ASISTENCIA CITACIONES CBPA', self.cursor.fetchone()[0]])
         # Asistencia General
-        # Asistencia Academias
         self.cursor.execute(
-            f"SELECT avg(c_vols) FROM actos WHERE fecha BETWEEN STR_TO_DATE('{fDesde}', '%d-%m-%Y') AND STR_TO_DATE('{fHasta}', '%d-%m-%Y')")
+            f"SELECT avg(c_vols) FROM actos WHERE fecha BETWEEN STR_TO_DATE('{fDesde}', '%d-%m-%Y') AND STR_TO_DATE('{fHasta}', '%d-%m-%Y') AND NOT (acto in ('C. ADM.','J. OFF', 'CONS. DISC'))")
         estadistica.append(['PROMEDIO ASISTENCIA GENERAL', self.cursor.fetchone()[0]])
 
 
