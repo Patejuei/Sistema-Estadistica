@@ -1,12 +1,12 @@
 {
 
-"Host":"localhost",
-"User":"root",
-"Password":"root",
-"DataBase":"asistencia_anual",
-"Nombre":"Andres Bahamondes Carvajal",
-"Cargo":"Ayudante 2do",
-"eMail":"andresbcarvajal4982@gmail.com",
-"pass_eMail":"pqqvpctwzekurasj"
+"Host":"",
+"User":"",
+"Password":"",
+"DataBase":"",
+"Nombre":"",
+"Cargo":"",
+"eMail":"",
+"pass_eMail":""
 
 }
