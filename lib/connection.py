@@ -354,5 +354,46 @@ class Conexion:
             vols.append(f"{rGral} - {nombre} {apellidoP} {apellidoM}")
         return vols
 
+    #Ingresar Nueva Licencia
+    def nv_lic(self, *args):
+        cLic, n_reg, f_desde, f_hasta, motivo, aprobado = args
+        query = f'INSERT INTO licencias VALUES ("{n_reg}", STR_TO_DATE("{f_desde}" , "%d-%m-%Y"), STR_TO_DATE("{f_hasta}", "%d-%m-%Y"), "{motivo}", "{aprobado}", "{cLic}")'
+        self.cursor.execute(query)
+        self.conecta.commit()
+        return
 
+    #Retornar Nombre para el campo
+    def get_nameVols(self, nReg):
+        query = f"SELECT nombre, apellidoP, apellidoM FROM bomberos WHERE reg_gral = '{nReg}'"
+        self.cursor.execute(query)
+        nom, apeP, apeM = self.cursor.fetchone()
+        nombre = f'{nom} {apeP} {apeM}'
+        return nombre
+
+    # Retornar Lista de Licencias
+    def get_ListLic(self, inp):
+        query = f"SELECT corr_Lic, b.nombre, b.apellidoP, b.apellidoM, f_desde, f_hasta FROM licencias INNER JOIN bomberos b on nro_registro = b.reg_gral WHERE b.nombre LIKE '{inp}%' OR b.apellidoP LIKE '{inp}%'"
+        self.cursor.execute(query)
+        licencias = self.cursor.fetchall()
+        return licencias
+
+    # Retornar contenido de licencias
+    def get_LicCont(self, CLic):
+        query = f"SELECT corr_Lic, nro_registro, f_desde, f_hasta, motivo, aprobado FROM licencias WHERE corr_Lic='{CLic}'"
+        self.cursor.execute(query)
+        licencia=self.cursor.fetchone()
+        return licencia
+    # Actualizar Licencia
+    def licenciaUpdate(self, *licencia):
+        cLic, n_reg, f_desde, f_hasta, motivo, aprobado = licencia
+        query = f'UPDATE licencias SET nro_registro = "{n_reg}", f_desde = STR_TO_DATE("{f_desde}" , "%d-%m-%Y"),f_hasta = STR_TO_DATE("{f_hasta}", "%d-%m-%Y"), motivo = "{motivo}", aprobado = "{aprobado}", corr_Lic = "{cLic}")'
+        self.cursor.execute(query)
+        self.conecta.commit()
+        return
+
+    # Eliminar Licencia
+    def deleteLicencia(self, corr_Lic):
+        sql = f'DELETE FROM licencias WHERE corr_Lic = "{corr_Lic}"'
+        self.cursor.execute(sql)
+        self.conecta.commit()
 

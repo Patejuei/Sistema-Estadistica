@@ -11,7 +11,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         super().__init__()
         self.setupUi(self)
         self.information = {
-            "version" : "1.0.0.1",
+            "version" : "1.1.0.0",
             "autor" : "Andrés Bahamondes Carvajal"
         }
 
@@ -30,6 +30,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.btnGenInforms.clicked.connect(lambda : self.contentField.setCurrentIndex(2))
         # Mostrar interfaz de voluntarios
         self.btnAdminVols.clicked.connect(lambda : self.contentField.setCurrentIndex(3))
+        # Mostrar interfaz de Licencias
+        self.btnLicencias.clicked.connect(lambda : self.contentField.setCurrentIndex(4))
 
         # Mostrar info
         self.btnInfo.clicked.connect(self.show_app_info)
@@ -144,6 +146,103 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.btnEditVol.clicked.connect(self.editar_vol)
         self.btnAddVol_3.clicked.connect(self.insert_vol)
         self.cbSubEstado.addItems(['ACTIVO', 'SUSPENDIDO', 'RENUNCIADO', 'SEPARADO', 'EXPULSADO'])
+
+        #Interfaz Licencias
+        self.cbVBCapitan.setTristate(True)
+        self.LicenseAproved = 'Pendiente'
+        self.LicenseStates = {2: 'Aprobado',0: 'Pendiente',1: 'Rechazado'}
+        self.CBLicenseStates = {'Aprobado': QtCore.Qt.CheckState.Checked, 'Pendiente': QtCore.Qt.CheckState.Unchecked, 'Rechazado': QtCore.Qt.CheckState.PartiallyChecked}
+        self.tblLicencias.setColumnCount(4)
+        self.tblLicencias.setHorizontalHeaderLabels(['Correlativo', 'Nombre', 'Fecha Desde', 'Fecha Hasta'])
+        self.buscarLicencias()
+        self.tblLicencias.horizontalHeader().setSectionResizeMode(0, QtWidgets.QHeaderView.ResizeMode.ResizeToContents)
+        self.tblLicencias.horizontalHeader().setSectionResizeMode(1, QtWidgets.QHeaderView.ResizeMode.Stretch)
+        self.tblLicencias.horizontalHeader().setSectionResizeMode(2, QtWidgets.QHeaderView.ResizeMode.ResizeToContents)
+        self.tblLicencias.horizontalHeader().setSectionResizeMode(3, QtWidgets.QHeaderView.ResizeMode.ResizeToContents)
+        self.tblLicencias.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
+        self.tblLicencias.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
+        self.tblLicencias.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
+        self.inpSrcLic.textChanged.connect(self.buscarLicencias)
+        self.tblLicencias.selectionModel().selectionChanged.connect(self.getLicencia)
+        self.inpRegLic.textChanged.connect(self.buscarNombre)
+        self.btnSaveLic.clicked.connect(self.saveLicencia)
+        self.btnUpdateLic.clicked.connect(self.updateLicencia)
+        self.btnNullLic.clicked.connect(self.borrarLicencia)
+
+    def borrarLicencia(self):
+        alerta = QtWidgets.QMessageBox.warning(
+            self, "Aviso", "¿Seguro que desea anular la licencia?", buttons=QtWidgets.QMessageBox.Apply | QtWidgets.QMessageBox.Cancel
+        )
+        if alerta == QtWidgets.QMessageBox.Apply:
+            try:
+                self.database.deleteLicencia(self.inpCorrLic.text())
+                self.buscarLicencias()
+                QtWidgets.QMessageBox.information(self, "Licencias", "Licencia anulada con éxito")
+            except Exception as e:
+                dialogo = QtWidgets.QMessageBox.warning(
+                    self, "Error", f"Ha ocurrido un error.\n Código de error: {e}"
+                )
+
+    def updateLicencia(self):
+        try:
+            self.database.licenciaUpdate(self.inpCorrLic.text(), self.inpRegLic.text(), self.dateDesdeLic.text(), self.dateHastaLic.text(), self.txtMotivoLic.toPlainText(), self.LicenseStates[self.cbVBCapitan.checkState().value])
+            self.buscarLicencias()
+            QtWidgets.QMessageBox.information(self, "Licencias", "Licencia actualizada con éxito")
+        except Exception as e:
+            dialogo = QtWidgets.QMessageBox.warning(
+                self, "Error", f"Ha ocurrido un error.\n Código de error: {e}"
+            )
+
+
+
+
+    def saveLicencia(self):
+        try:
+            self.database.nv_lic(self.inpCorrLic.text(), self.inpRegLic.text(), self.dateDesdeLic.text(), self.dateHastaLic.text(), self.txtMotivoLic.toPlainText(), self.LicenseStates[self.cbVBCapitan.checkState().value])
+            QtWidgets.QMessageBox.information(self, "Licencias", "Licencia guardada con éxito")
+            self.buscarLicencias()
+        except Exception as e:
+            dialogo = QtWidgets.QMessageBox.warning(
+                self, "Error", f"Ha ocurrido un error.\n Código de error: {e}"
+            )
+
+    def buscarNombre(self):
+        try:
+            self.inpNomLic.setText(self.database.get_nameVols(self.inpRegLic.text()))
+        except Exception as e:
+            pass
+
+    def getLicencia(self, seleccion):
+        if seleccion.indexes():
+            fila = seleccion.indexes()[0].row()
+            cLic = self.tblLicencias.model().index(fila, 0).data()
+            CorrLic, nReg, fDesde, fHasta, motivo, aprobado = self.database.get_LicCont(cLic)
+            self.inpCorrLic.setText(CorrLic)
+            self.inpNomLic.setText(self.database.get_nameVols(nReg))
+            self.inpRegLic.setText(nReg)
+            self.dateDesdeLic.setDate(fDesde)
+            self.dateHastaLic.setDate(fHasta)
+            self.txtMotivoLic.setText(motivo)
+            self.cbVBCapitan.setCheckState(self.CBLicenseStates[aprobado])
+
+
+
+    def buscarLicencias(self):
+        self.clearTable(self.tblLicencias)
+        # try:
+        lics = self.database.get_ListLic(self.inpSrcLic.text())
+        for i in range(len(lics)):
+            cLic, nombre, apellido1, apellido2, fDesde, fHasta = lics[i]
+            fNombre = f'{nombre} {apellido1} {apellido2}'
+            self.tblLicencias.insertRow(i)
+            self.tblLicencias.setItem(i, 0, QtWidgets.QTableWidgetItem(cLic))
+            self.tblLicencias.setItem(i, 1, QtWidgets.QTableWidgetItem(fNombre))
+            self.tblLicencias.setItem(i, 2, QtWidgets.QTableWidgetItem(str(fDesde)))
+            self.tblLicencias.setItem(i, 3, QtWidgets.QTableWidgetItem(str(fHasta)))
+        # except Exception as e:
+        #     pass
+
+
 
     def informePersonal(self):
         try:

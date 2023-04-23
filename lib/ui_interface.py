@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'interfaceyBXaFi.ui'
+## Form generated from reading UI file 'interfaceYFeVQp.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.4.1
 ##
@@ -19,79 +19,37 @@ from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QDateEdit,
     QHBoxLayout, QHeaderView, QLabel, QLayout,
     QLineEdit, QMainWindow, QPushButton, QSizePolicy,
     QSpacerItem, QStackedWidget, QTableWidget, QTableWidgetItem,
-    QVBoxLayout, QWidget)
+    QTextEdit, QVBoxLayout, QWidget)
 import lib.Recursos_rc
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(937, 612)
+        MainWindow.resize(1037, 641)
         icon = QIcon()
         icon.addFile(u":/Logos/CbpaLogo.ico", QSize(), QIcon.Normal, QIcon.Off)
         MainWindow.setWindowIcon(icon)
         MainWindow.setAnimated(True)
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
-        self.centralwidget.setStyleSheet(u"QLineEdit, QComboBox, QLabel, QDateEdit, QCheckBox{\n"
-"height: 24px;\n"
-"}\n"
-"QPushButton{\n"
-"border: none;\n"
-"cursor: pointer;\n"
-"}\n"
-"#btnSave{\n"
-"background-color: #bc2041;\n"
-"border-radius: 4px;\n"
-"}\n"
-"QWidget{\n"
-"color: #F0F3F8;\n"
-"background-color: #41436A;\n"
-"font-family: Inter;\n"
-"font-size: 12px;\n"
-"font-weight: bold;\n"
+        self.centralwidget.setStyleSheet(u"#SideBar{\n"
+"background-color: #202020;\n"
+"color: #f5f5f5\n"
 "}\n"
 "#SideBar QPushButton{\n"
-"transition-duration: 0.4s;\n"
-"border-radius: 4px;\n"
+"background-color: transparent;\n"
+"color: #f5f5f5;\n"
+"border: none;\n"
 "}\n"
 "#SideBar QPushButton:hover{\n"
-"background-color: #974063;\n"
-"}\n"
-"QTableWidget{\n"
-"background-color: #F0F3F8;\n"
-"color: #41436A;\n"
-"}\n"
-"#newListActions QPushButton{\n"
-"height: 24px;\n"
-"}\n"
-"QComboBox, QDateEdit, QLineEdit{\n"
-"background-color: #F0F3F8;\n"
-"border: 1px solid #F54768;\n"
-"border-radius: 8px;\n"
-"color: #41436A;\n"
-"}\n"
-"#contentField QPushButton{\n"
-"border: 0.5px solid #F54768;\n"
-"height: 24px;\n"
-"border-radius: 12px;\n"
-"transition-duration: 0.4s;\n"
-"}\n"
-"\n"
-"#contentField QPushButton:hover{\n"
-"background-color: #974063;\n"
-"}\n"
-"\n"
-"#secM"
-                        "ensual, #secPersonalizado, #secOInformes, #secDetallePers{\n"
-"border:  1px solid #F54768;\n"
-"padding: 4px;\n"
-"border-radius: 16px\n"
-"}\n"
-"QHeaderView::section{\n"
+"background-color: #5E90F2;\n"
 "color: #202020;\n"
 "}\n"
-"")
+"QLineEdit, QTableEdit, QDateEdit{\n"
+"border-radius: 4px;\n"
+"border: 0.5px solid lightgrey;\n"
+"}")
         self.horizontalLayout = QHBoxLayout(self.centralwidget)
         self.horizontalLayout.setObjectName(u"horizontalLayout")
         self.SideBar = QWidget(self.centralwidget)
@@ -125,6 +83,7 @@ class Ui_MainWindow(object):
         sizePolicy1.setVerticalStretch(0)
         sizePolicy1.setHeightForWidth(self.btnInsertList.sizePolicy().hasHeightForWidth())
         self.btnInsertList.setSizePolicy(sizePolicy1)
+        self.btnInsertList.setCursor(QCursor(Qt.PointingHandCursor))
         icon1 = QIcon()
         icon1.addFile(u":/Icons/Icons/file-plus.svg", QSize(), QIcon.Normal, QIcon.Off)
         self.btnInsertList.setIcon(icon1)
@@ -135,6 +94,7 @@ class Ui_MainWindow(object):
         self.btnViewList.setObjectName(u"btnViewList")
         sizePolicy1.setHeightForWidth(self.btnViewList.sizePolicy().hasHeightForWidth())
         self.btnViewList.setSizePolicy(sizePolicy1)
+        self.btnViewList.setCursor(QCursor(Qt.PointingHandCursor))
         icon2 = QIcon()
         icon2.addFile(u":/Icons/Icons/edit.svg", QSize(), QIcon.Normal, QIcon.Off)
         self.btnViewList.setIcon(icon2)
@@ -145,6 +105,7 @@ class Ui_MainWindow(object):
         self.btnGenInforms.setObjectName(u"btnGenInforms")
         sizePolicy1.setHeightForWidth(self.btnGenInforms.sizePolicy().hasHeightForWidth())
         self.btnGenInforms.setSizePolicy(sizePolicy1)
+        self.btnGenInforms.setCursor(QCursor(Qt.PointingHandCursor))
         icon3 = QIcon()
         icon3.addFile(u":/Icons/Icons/file-text.svg", QSize(), QIcon.Normal, QIcon.Off)
         self.btnGenInforms.setIcon(icon3)
@@ -155,11 +116,23 @@ class Ui_MainWindow(object):
         self.btnAdminVols.setObjectName(u"btnAdminVols")
         sizePolicy1.setHeightForWidth(self.btnAdminVols.sizePolicy().hasHeightForWidth())
         self.btnAdminVols.setSizePolicy(sizePolicy1)
+        self.btnAdminVols.setCursor(QCursor(Qt.PointingHandCursor))
         icon4 = QIcon()
         icon4.addFile(u":/Icons/Icons/user-check.svg", QSize(), QIcon.Normal, QIcon.Off)
         self.btnAdminVols.setIcon(icon4)
 
         self.verticalLayout.addWidget(self.btnAdminVols)
+
+        self.btnLicencias = QPushButton(self.actionMenu)
+        self.btnLicencias.setObjectName(u"btnLicencias")
+        sizePolicy1.setHeightForWidth(self.btnLicencias.sizePolicy().hasHeightForWidth())
+        self.btnLicencias.setSizePolicy(sizePolicy1)
+        self.btnLicencias.setCursor(QCursor(Qt.PointingHandCursor))
+        icon5 = QIcon()
+        icon5.addFile(u":/Icons/Icons/inbox.svg", QSize(), QIcon.Normal, QIcon.Off)
+        self.btnLicencias.setIcon(icon5)
+
+        self.verticalLayout.addWidget(self.btnLicencias)
 
 
         self.verticalLayout_3.addWidget(self.actionMenu)
@@ -170,17 +143,17 @@ class Ui_MainWindow(object):
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
         self.btnInfo = QPushButton(self.infoMenu)
         self.btnInfo.setObjectName(u"btnInfo")
-        icon5 = QIcon()
-        icon5.addFile(u":/Icons/Icons/info.svg", QSize(), QIcon.Normal, QIcon.Off)
-        self.btnInfo.setIcon(icon5)
+        icon6 = QIcon()
+        icon6.addFile(u":/Icons/Icons/info.svg", QSize(), QIcon.Normal, QIcon.Off)
+        self.btnInfo.setIcon(icon6)
 
         self.verticalLayout_2.addWidget(self.btnInfo)
 
         self.btnHelp = QPushButton(self.infoMenu)
         self.btnHelp.setObjectName(u"btnHelp")
-        icon6 = QIcon()
-        icon6.addFile(u":/Icons/Icons/help-circle.svg", QSize(), QIcon.Normal, QIcon.Off)
-        self.btnHelp.setIcon(icon6)
+        icon7 = QIcon()
+        icon7.addFile(u":/Icons/Icons/help-circle.svg", QSize(), QIcon.Normal, QIcon.Off)
+        self.btnHelp.setIcon(icon7)
 
         self.verticalLayout_2.addWidget(self.btnHelp)
 
@@ -309,9 +282,9 @@ class Ui_MainWindow(object):
         self.btnSave = QPushButton(self.pageInsert)
         self.btnSave.setObjectName(u"btnSave")
         self.btnSave.setMaximumSize(QSize(16777215, 16777215))
-        icon7 = QIcon()
-        icon7.addFile(u":/Icons/Icons/save.svg", QSize(), QIcon.Normal, QIcon.Off)
-        self.btnSave.setIcon(icon7)
+        icon8 = QIcon()
+        icon8.addFile(u":/Icons/Icons/save.svg", QSize(), QIcon.Normal, QIcon.Off)
+        self.btnSave.setIcon(icon8)
 
         self.newListActions.addWidget(self.btnSave)
 
@@ -447,17 +420,17 @@ class Ui_MainWindow(object):
 
         self.btnAddVol_2 = QPushButton(self.volsEdit)
         self.btnAddVol_2.setObjectName(u"btnAddVol_2")
-        icon8 = QIcon()
-        icon8.addFile(u":/Icons/Icons/plus.svg", QSize(), QIcon.Normal, QIcon.Off)
-        self.btnAddVol_2.setIcon(icon8)
+        icon9 = QIcon()
+        icon9.addFile(u":/Icons/Icons/plus.svg", QSize(), QIcon.Normal, QIcon.Off)
+        self.btnAddVol_2.setIcon(icon9)
 
         self.verticalLayout_7.addWidget(self.btnAddVol_2)
 
         self.btnDelVol_2 = QPushButton(self.volsEdit)
         self.btnDelVol_2.setObjectName(u"btnDelVol_2")
-        icon9 = QIcon()
-        icon9.addFile(u":/Icons/Icons/minus.svg", QSize(), QIcon.Normal, QIcon.Off)
-        self.btnDelVol_2.setIcon(icon9)
+        icon10 = QIcon()
+        icon10.addFile(u":/Icons/Icons/minus.svg", QSize(), QIcon.Normal, QIcon.Off)
+        self.btnDelVol_2.setIcon(icon10)
 
         self.verticalLayout_7.addWidget(self.btnDelVol_2)
 
@@ -471,15 +444,15 @@ class Ui_MainWindow(object):
 
         self.btnSaveEdit = QPushButton(self.editLl)
         self.btnSaveEdit.setObjectName(u"btnSaveEdit")
-        self.btnSaveEdit.setIcon(icon7)
+        self.btnSaveEdit.setIcon(icon8)
 
         self.verticalLayout_5.addWidget(self.btnSaveEdit)
 
         self.btnDeleteEdit = QPushButton(self.editLl)
         self.btnDeleteEdit.setObjectName(u"btnDeleteEdit")
-        icon10 = QIcon()
-        icon10.addFile(u":/Icons/Icons/trash-2.svg", QSize(), QIcon.Normal, QIcon.Off)
-        self.btnDeleteEdit.setIcon(icon10)
+        icon11 = QIcon()
+        icon11.addFile(u":/Icons/Icons/trash-2.svg", QSize(), QIcon.Normal, QIcon.Off)
+        self.btnDeleteEdit.setIcon(icon11)
 
         self.verticalLayout_5.addWidget(self.btnDeleteEdit)
 
@@ -783,6 +756,125 @@ class Ui_MainWindow(object):
         self.horizontalLayout_21.addWidget(self.widget_2)
 
         self.contentField.addWidget(self.pageVols)
+        self.pageLicencia = QWidget()
+        self.pageLicencia.setObjectName(u"pageLicencia")
+        self.horizontalLayout_17 = QHBoxLayout(self.pageLicencia)
+        self.horizontalLayout_17.setObjectName(u"horizontalLayout_17")
+        self.layoutSrcLic = QVBoxLayout()
+        self.layoutSrcLic.setObjectName(u"layoutSrcLic")
+        self.label_38 = QLabel(self.pageLicencia)
+        self.label_38.setObjectName(u"label_38")
+
+        self.layoutSrcLic.addWidget(self.label_38)
+
+        self.inpSrcLic = QLineEdit(self.pageLicencia)
+        self.inpSrcLic.setObjectName(u"inpSrcLic")
+
+        self.layoutSrcLic.addWidget(self.inpSrcLic)
+
+        self.tblLicencias = QTableWidget(self.pageLicencia)
+        self.tblLicencias.setObjectName(u"tblLicencias")
+
+        self.layoutSrcLic.addWidget(self.tblLicencias)
+
+
+        self.horizontalLayout_17.addLayout(self.layoutSrcLic)
+
+        self.layoutCRUDLic = QVBoxLayout()
+        self.layoutCRUDLic.setObjectName(u"layoutCRUDLic")
+        self.label_39 = QLabel(self.pageLicencia)
+        self.label_39.setObjectName(u"label_39")
+
+        self.layoutCRUDLic.addWidget(self.label_39)
+
+        self.inpCorrLic = QLineEdit(self.pageLicencia)
+        self.inpCorrLic.setObjectName(u"inpCorrLic")
+        self.inpCorrLic.setMaxLength(5)
+
+        self.layoutCRUDLic.addWidget(self.inpCorrLic)
+
+        self.label_32 = QLabel(self.pageLicencia)
+        self.label_32.setObjectName(u"label_32")
+
+        self.layoutCRUDLic.addWidget(self.label_32)
+
+        self.inpNomLic = QLineEdit(self.pageLicencia)
+        self.inpNomLic.setObjectName(u"inpNomLic")
+        self.inpNomLic.setEnabled(False)
+        self.inpNomLic.setCursor(QCursor(Qt.ForbiddenCursor))
+        self.inpNomLic.setReadOnly(True)
+
+        self.layoutCRUDLic.addWidget(self.inpNomLic)
+
+        self.label_33 = QLabel(self.pageLicencia)
+        self.label_33.setObjectName(u"label_33")
+
+        self.layoutCRUDLic.addWidget(self.label_33)
+
+        self.inpRegLic = QLineEdit(self.pageLicencia)
+        self.inpRegLic.setObjectName(u"inpRegLic")
+
+        self.layoutCRUDLic.addWidget(self.inpRegLic)
+
+        self.label_34 = QLabel(self.pageLicencia)
+        self.label_34.setObjectName(u"label_34")
+
+        self.layoutCRUDLic.addWidget(self.label_34)
+
+        self.dateDesdeLic = QDateEdit(self.pageLicencia)
+        self.dateDesdeLic.setObjectName(u"dateDesdeLic")
+
+        self.layoutCRUDLic.addWidget(self.dateDesdeLic)
+
+        self.label_35 = QLabel(self.pageLicencia)
+        self.label_35.setObjectName(u"label_35")
+
+        self.layoutCRUDLic.addWidget(self.label_35)
+
+        self.dateHastaLic = QDateEdit(self.pageLicencia)
+        self.dateHastaLic.setObjectName(u"dateHastaLic")
+
+        self.layoutCRUDLic.addWidget(self.dateHastaLic)
+
+        self.label_36 = QLabel(self.pageLicencia)
+        self.label_36.setObjectName(u"label_36")
+
+        self.layoutCRUDLic.addWidget(self.label_36)
+
+        self.txtMotivoLic = QTextEdit(self.pageLicencia)
+        self.txtMotivoLic.setObjectName(u"txtMotivoLic")
+
+        self.layoutCRUDLic.addWidget(self.txtMotivoLic)
+
+        self.label_37 = QLabel(self.pageLicencia)
+        self.label_37.setObjectName(u"label_37")
+
+        self.layoutCRUDLic.addWidget(self.label_37)
+
+        self.cbVBCapitan = QCheckBox(self.pageLicencia)
+        self.cbVBCapitan.setObjectName(u"cbVBCapitan")
+
+        self.layoutCRUDLic.addWidget(self.cbVBCapitan)
+
+        self.btnSaveLic = QPushButton(self.pageLicencia)
+        self.btnSaveLic.setObjectName(u"btnSaveLic")
+
+        self.layoutCRUDLic.addWidget(self.btnSaveLic)
+
+        self.btnUpdateLic = QPushButton(self.pageLicencia)
+        self.btnUpdateLic.setObjectName(u"btnUpdateLic")
+
+        self.layoutCRUDLic.addWidget(self.btnUpdateLic)
+
+        self.btnNullLic = QPushButton(self.pageLicencia)
+        self.btnNullLic.setObjectName(u"btnNullLic")
+
+        self.layoutCRUDLic.addWidget(self.btnNullLic)
+
+
+        self.horizontalLayout_17.addLayout(self.layoutCRUDLic)
+
+        self.contentField.addWidget(self.pageLicencia)
 
         self.horizontalLayout.addWidget(self.contentField)
 
@@ -790,7 +882,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.contentField.setCurrentIndex(0)
+        self.contentField.setCurrentIndex(4)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -802,6 +894,7 @@ class Ui_MainWindow(object):
         self.btnViewList.setText(QCoreApplication.translate("MainWindow", u"Ver Servicios", None))
         self.btnGenInforms.setText(QCoreApplication.translate("MainWindow", u"Generar Informes", None))
         self.btnAdminVols.setText(QCoreApplication.translate("MainWindow", u"Administrar Bomberos", None))
+        self.btnLicencias.setText(QCoreApplication.translate("MainWindow", u"Licencias", None))
         self.btnInfo.setText(QCoreApplication.translate("MainWindow", u"Informaci\u00f3n", None))
         self.btnHelp.setText(QCoreApplication.translate("MainWindow", u"Ayuda", None))
         self.label.setText(QCoreApplication.translate("MainWindow", u"Correlativo Compa\u00f1\u00eda", None))
@@ -854,5 +947,25 @@ class Ui_MainWindow(object):
         self.label_28.setText(QCoreApplication.translate("MainWindow", u"Sub-Estado", None))
         self.btnEditVol.setText(QCoreApplication.translate("MainWindow", u"Editar", None))
         self.btnAddVol_3.setText(QCoreApplication.translate("MainWindow", u"Agregar", None))
+        self.label_38.setText(QCoreApplication.translate("MainWindow", u"Buscar", None))
+        self.label_39.setText(QCoreApplication.translate("MainWindow", u"Correlativo", None))
+        self.label_32.setText(QCoreApplication.translate("MainWindow", u"Nombre", None))
+        self.label_33.setText(QCoreApplication.translate("MainWindow", u"N\u00b0 de Registro", None))
+        self.label_34.setText(QCoreApplication.translate("MainWindow", u"Fecha Desde", None))
+        self.label_35.setText(QCoreApplication.translate("MainWindow", u"Fecha Hasta", None))
+        self.label_36.setText(QCoreApplication.translate("MainWindow", u"Motivo", None))
+        self.txtMotivoLic.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"hr { height: 1px; border-width: 0; }\n"
+"li.unchecked::marker { content: \"\\2610\"; }\n"
+"li.checked::marker { content: \"\\2612\"; }\n"
+"</style></head><body style=\" font-family:'Segoe UI'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Inter'; font-size:12px; font-weight:700;\"><br /></p></body></html>", None))
+        self.label_37.setText(QCoreApplication.translate("MainWindow", u"V.B Capit\u00e1n", None))
+        self.cbVBCapitan.setText(QCoreApplication.translate("MainWindow", u"Aprobado", None))
+        self.btnSaveLic.setText(QCoreApplication.translate("MainWindow", u"Guardar", None))
+        self.btnUpdateLic.setText(QCoreApplication.translate("MainWindow", u"Actualizar", None))
+        self.btnNullLic.setText(QCoreApplication.translate("MainWindow", u"Anular", None))
     # retranslateUi
 
