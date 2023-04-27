@@ -11,7 +11,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         super().__init__()
         self.setupUi(self)
         self.information = {
-            "version" : "1.1.0.2",
+            "version" : "1.1.0.0",
             "autor" : "Andrés Bahamondes Carvajal"
         }
 
@@ -37,6 +37,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.btnInfo.clicked.connect(self.show_app_info)
         # Mostrar ayuda
         self.btnHelp.clicked.connect(self.show_help_manual)
+
+        self.efectiva = "AB"
         self.lista = set()
         self.contentField.setCurrentIndex(0)
 
@@ -44,7 +46,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.btnViewList.clicked.connect(self.buscar_listas)
 
         # Interfaz de Ingreso
-        self.efectivaEstateIn = {2 : "OB", 0: "AB"}
         actos = QtWidgets.QCompleter(['SS.EE', 'SS.OO.', 'ACADEMIA', 'J. OFF', 'INCENDIO', 'I. FOREST.', 'C. ADM.', "CONS. DISC",
                                       'DESFILE CB', 'SS. EE. CB', 'ROMERIA CB'
                                       '10-0-1', '10-0-2', '10-0-3', '10-0-4', '10-0-5', '10-0-6', '10-0-7', '10-0-8',
@@ -81,8 +82,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.btnSave.clicked.connect(self.save_list)
         
         #Interfaz de Edicion
-        self.efectivaEditEstates = {2: "OB", 0:"AB"}
-        self.cbEfectivaEditEstates = {"OB": QtCore.Qt.CheckState.Checked, "AB": QtCore.Qt.CheckState.Unchecked}
         self.liListsView.setColumnCount(4)
         self.liListsView.setHorizontalHeaderLabels(['Correlativo de Compañía', 'Fecha', 'Acto', 'Dirección'])
         self.buscar_listas()
@@ -416,7 +415,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def edit_list(self):
         try:
             cCia = self.liListsView.model().index(self.liListsView.currentRow(), 0).data()
-            self.database.editLista(cCia, self.fldActoEdit.text(), self.inpCorrGenEdit.text(), self.inpFechaEdit.text(), self.inpDireccionEdit.text(), self.efectivaEditEstates[self.cbEfectivaEdit.checkState().value], len(self.lista),self.lista)
+            self.database.editLista(cCia, self.fldActoEdit.text(), self.inpCorrGenEdit.text(), self.inpFechaEdit.text(), self.inpDireccionEdit.text(), self.efectiva, len(self.lista),self.lista)
             self.cbMesInforme.clear()
             self.cbAnoInforme.clear()
             self.cbMesInforme.addItems(self.database.getMonth())
@@ -460,7 +459,10 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.fldActoEdit.setText(acto)
             self.inpDireccionEdit.setText(direccion)
             self.inpFechaEdit.setDate(fecha)
-            self.cbEfectivaEdit.setCheckState(self.cbEfectivaEditEstates[lista])
+            if lista == "OB":
+                self.cbEfectivaEdit.setCheckState(QtCore.Qt.CheckState.Checked)
+            else:
+                self.cbEfectivaEdit.setCheckState(QtCore.Qt.CheckState.Unchecked)
             self.clearTable(self.liVolsEdit)
             vols = self.database.extVols(cCia)
             for i in range(len(vols)):
@@ -481,6 +483,13 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.liListsView.setItem(i, 1, QtWidgets.QTableWidgetItem(str(cGral)))
             self.liListsView.setItem(i, 2, QtWidgets.QTableWidgetItem(acto))
             self.liListsView.setItem(i, 3, QtWidgets.QTableWidgetItem(direccion))
+
+
+    def setLista(self, state):
+        if state == 2:
+            self.efectiva = "OB"
+        elif state == 0:
+            self.efectiva = "AB"
     
     def add_vol_to_list(self, input_vol):
         try:
@@ -551,8 +560,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def save_list(self):
         try:
-            self.database.addLista(self.inpCorrCia.text(), self.inpActo.text(), self.inpCorrGral.text(), self.inpFecha.text(), self.inpDireccion.text(), self.efectivaEstateIn[self.cbEfectiva.checkState().value], len(self.lista), self.lista)
+            self.database.addLista(self.inpCorrCia.text(), self.inpActo.text(), self.inpCorrGral.text(), self.inpFecha.text(), self.inpDireccion.text(), self.efectiva, len(self.lista), self.lista)
             aviso = QtWidgets.QMessageBox.information(self, "Guardar", "Lista guardada exitosamente")
+            self.efectiva = "AB"
             self.clearFields()
         except Exception as e:
             dialogo = QtWidgets.QMessageBox.warning(
