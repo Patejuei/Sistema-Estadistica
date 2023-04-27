@@ -372,7 +372,7 @@ class Conexion:
 
     # Retornar Lista de Licencias
     def get_ListLic(self, inp):
-        query = f"SELECT corr_Lic, b.nombre, b.apellidoP, b.apellidoM, f_desde, f_hasta FROM licencias INNER JOIN bomberos b on nro_registro = b.reg_gral WHERE b.nombre LIKE '{inp}%' OR b.apellidoP LIKE '{inp}%'"
+        query = f"SELECT corr_Lic, b.nombre, b.apellidoP, b.apellidoM, f_desde, f_hasta FROM licencias INNER JOIN bomberos b on nro_registro = b.reg_gral WHERE b.nombre LIKE '{inp}%' OR b.apellidoP LIKE '{inp}%' ORDER BY corr_Lic DESC"
         self.cursor.execute(query)
         licencias = self.cursor.fetchall()
         return licencias
