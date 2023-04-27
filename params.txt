@@ -1,9 +1,9 @@
 {
 
-"Host":"",
-"User":"",
-"Password":"",
-"DataBase":"",
+"Host":"localhost",
+"User":"Ayudante",
+"Password":"Ayudante9BTobalaba",
+"DataBase":"asistencia_anual",
 "Nombre":"",
 "Cargo":"",
 "eMail":"",

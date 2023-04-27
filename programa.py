@@ -11,7 +11,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         super().__init__()
         self.setupUi(self)
         self.information = {
-            "version" : "1.1.0.2",
+            "version" : "1.1.0.3",
             "autor" : "Andrés Bahamondes Carvajal"
         }
 
@@ -66,7 +66,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.inpCorrCia.setMaxLength(7)
         self.inpActo.setMaxLength(10)
         self.inpDireccion.setMaxLength(100)
-        self.cbEfectiva.stateChanged.connect(self.setLista)
         self.liVols.setColumnCount(2)
         self.liVols.setHorizontalHeaderLabels(['Registro General', 'Nombre'])
         self.liVols.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
@@ -104,7 +103,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.liVolsEdit.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
         self.liVolsEdit.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
         self.liVolsEdit.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
-        self.cbEfectivaEdit.stateChanged.connect(self.setLista)
         self.inpAddVolEdit.returnPressed.connect(lambda: self.add_vol_to_list(self.inpAddVolEdit.text()))
         self.btnAddVol_2.clicked.connect(lambda: self.add_vol_to_list(self.inpAddVolEdit.text()))
         self.btnDelVol_2.clicked.connect(self.del_vol_to_list)
@@ -170,6 +168,16 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.btnUpdateLic.clicked.connect(self.updateLicencia)
         self.btnNullLic.clicked.connect(self.borrarLicencia)
 
+    def getSaveFile(self):
+        file_filter = 'Todos los Archivos;; Archivo Excel (*.xlsx *.xls)'
+        response = QtWidgets.QFileDialog.getSaveFileName(
+            parent= self,
+            caption='Guardar el Reporte',
+            filter=file_filter,
+            selectedFilter= 'Archivo Excel (*.xlsx *.xls)'
+        )
+        return response[0]
+
     def borrarLicencia(self):
         alerta = QtWidgets.QMessageBox.warning(
             self, "Aviso", "¿Seguro que desea anular la licencia?", buttons=QtWidgets.QMessageBox.Apply | QtWidgets.QMessageBox.Cancel
@@ -193,9 +201,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             dialogo = QtWidgets.QMessageBox.warning(
                 self, "Error", f"Ha ocurrido un error.\n Código de error: {e}"
             )
-
-
-
 
     def saveLicencia(self):
         try:
@@ -247,7 +252,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def informePersonal(self):
         try:
-            informesPath = os.path.abspath('informes\\personal.xlsx')
+            informesPath = self.getSaveFile()
             headerAsis = ['Año', 'Listas Totales', 'Asistencia Total', 'Listas Obligatorias','Asistencia Obligatorias']
             headerActos = ["Correlativo Compañia", "Tipo de Acto", "Correlativo General",
                            "Fecha",
@@ -291,7 +296,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def arrastre(self):
         try:
-            arrastrePath = os.path.abspath('informes\\arrastre.pdf')
+            arrastrePath = self.getSaveFile()
             arrastre = self.database.getArrastre(self.infoFechaDesde.text(),self.infoFechaHasta.text())
             open(os.path.abspath('resources/template.html'), 'w').write(arrastre)
             with open(os.path.abspath('resources/template.html')) as f:
@@ -309,14 +314,15 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def informe90dias(self):
         header = ["Reg. Gral", "Nombre", "Apellido Paterno", "Apellido Materno"]
         try:
+            path = self.getSaveFile()
             lista, actos = self.database.info90()
             dfActos = pd.DataFrame(actos)
             dfListas = pd.DataFrame(lista)
-            exelWriter = pd.ExcelWriter(self.informesPath)
+            exelWriter = pd.ExcelWriter(path)
             dfListas.to_excel(exelWriter, sheet_name="Voluntarios sin asistencia", header=header, index=False)
             dfActos.to_excel(exelWriter, sheet_name="Actos", header=self.headeractos, index=False)
             exelWriter.close()
-            os.startfile(self.informesPath)
+            os.startfile(path)
         except Exception as e:
             dialogo = QtWidgets.QMessageBox.warning(
                 self, "Error", f"Ha ocurrido un error generando el informe.\n Código de error: {e}"
@@ -327,16 +333,17 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def resumenEspecifico(self):
         try:
+            path = self.getSaveFile()
             lista, actos, estadistica = self.database.resEspecifico(self.infoFechaDesde.text(), self.infoFechaHasta.text())
             dfActos = pd.DataFrame(actos)
             dfListas = pd.DataFrame(lista)
             dfEstadistica = pd.DataFrame(estadistica)
-            exelWriter = pd.ExcelWriter(self.informesPath)
+            exelWriter = pd.ExcelWriter(path)
             dfListas.to_excel(exelWriter, sheet_name="Asistencia Voluntarios", header=self.header, index=False)
             dfActos.to_excel(exelWriter, sheet_name="Actos", header=self.headeractos, index=False)
             dfEstadistica.to_excel(exelWriter, sheet_name="Estadistica", header=False, index=False)
             exelWriter.close()
-            os.startfile(self.informesPath)
+            os.startfile(path)
         except Exception as e:
             dialogo = QtWidgets.QMessageBox.warning(
                 self, "Error", f"Ha ocurrido un error generando el informe.\n Código de error: {e}"
@@ -346,17 +353,18 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def resumenMensual(self):
         try:
+            informesPath = self.getSaveFile()
             headerEstadistica = ['Incendios', 'Estructurales', 'Rescates', 'Salvamentos', 'Materiales Peligrosos', 'Llamados de Comandancia']
             lista, actos, estadistica = self.database.resMensual(self.cbMesInforme.currentText(), self.cbAnoInforme.currentText())
             dfActos = pd.DataFrame(actos)
             dfListas = pd.DataFrame(lista)
             dfEstadistica = pd.DataFrame(estadistica)
-            exelWriter = pd.ExcelWriter(self.informesPath)
+            exelWriter = pd.ExcelWriter(informesPath)
             dfListas.to_excel(exelWriter, sheet_name="Asistencia Voluntarios", header=self.header, index=False)
             dfActos.to_excel(exelWriter, sheet_name="Actos", header=self.headeractos, index=False)
             dfEstadistica.to_excel(exelWriter, sheet_name="Estadistica", header=False, index=False)
             exelWriter.close()
-            os.startfile(self.informesPath)
+            os.startfile(informesPath)
 
         except Exception as e:
             dialogo = QtWidgets.QMessageBox.warning(
