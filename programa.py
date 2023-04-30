@@ -11,7 +11,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         super().__init__()
         self.setupUi(self)
         self.information = {
-            "version" : "1.1.0.3",
+            "version" : "1.1.0.5",
             "autor" : "Andrés Bahamondes Carvajal"
         }
 
@@ -559,7 +559,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def save_list(self):
         try:
-            self.database.addLista(self.inpCorrCia.text(), self.inpActo.text(), self.inpCorrGral.text(), self.inpFecha.text(), self.inpDireccion.text(), self.efectiva, len(self.lista), self.lista)
+            self.database.addLista(self.inpCorrCia.text(), self.inpActo.text(), self.inpCorrGral.text(), self.inpFecha.text(), self.inpDireccion.text(), self.efectivaEstateIn[self.cbEfectiva.checkState().value], len(self.lista), self.lista)
             aviso = QtWidgets.QMessageBox.information(self, "Guardar", "Lista guardada exitosamente")
             self.efectiva = "AB"
             self.clearFields()
