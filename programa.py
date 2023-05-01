@@ -231,8 +231,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.txtMotivoLic.setText(motivo)
             self.cbVBCapitan.setCheckState(self.CBLicenseStates[aprobado])
 
-
-
     def buscarLicencias(self):
         self.clearTable(self.tblLicencias)
         # try:
@@ -247,8 +245,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.tblLicencias.setItem(i, 3, QtWidgets.QTableWidgetItem(str(fHasta)))
         # except Exception as e:
         #     pass
-
-
 
     def informePersonal(self):
         try:
@@ -274,10 +270,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             )
             return
 
-
-
-
-
     def enviarCorreos(self):
         alerta = QtWidgets.QMessageBox.warning(
             self, "Aviso", "Estará a punto de enviar los resúmenes individuales a los correos.\n ¿Desea Proceder?", buttons=QtWidgets.QMessageBox.Apply | QtWidgets.QMessageBox.Cancel)
@@ -293,7 +285,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         else:
             return
 
-
     def arrastre(self):
         try:
             arrastrePath = self.getSaveFile()
@@ -307,9 +298,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 self, "Error", f"Ha ocurrido un error generando el arrastre.\n Código de error: {e}"
             )
             return
-
-
-
 
     def informe90dias(self):
         header = ["Reg. Gral", "Nombre", "Apellido Paterno", "Apellido Materno"]
@@ -329,8 +317,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             )
             return
 
-
-
     def resumenEspecifico(self):
         try:
             path = self.getSaveFile()
@@ -349,7 +335,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 self, "Error", f"Ha ocurrido un error generando el informe.\n Código de error: {e}"
             )
             return
-
 
     def resumenMensual(self):
         try:
@@ -372,7 +357,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             )
             return
 
-
     def insert_vol(self):
         try:
             self.database.addVols(self.fldRegGral.text(), self.fldRegCia.text(), self.fldNombre.text(), self.fldApellidoP.text(), self.fldApellidoM.text(), self.fldRut.text(), self.fldeMail.text(), self.fldFechaIn.text(), self.cbSubEstado.currentText())
@@ -382,7 +366,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 self, "Error", f"Ha ocurrido un error.\n Código de error: {e}"
             )
             return
-
 
     def editar_vol(self):
         try:
@@ -420,11 +403,10 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.tblAdminVols.setItem(i, 0, QtWidgets.QTableWidgetItem(rGral))
             self.tblAdminVols.setItem(i, 1, QtWidgets.QTableWidgetItem(f'{nombre} {apellido1} {apellido2}'))
 
-
     def edit_list(self):
         try:
             cCia = self.liListsView.model().index(self.liListsView.currentRow(), 0).data()
-            self.database.editLista(cCia, self.fldActoEdit.text(), self.inpCorrGenEdit.text(), self.inpFechaEdit.text(), self.inpDireccionEdit.text(), self.efectiva, len(self.lista),self.lista)
+            self.database.editLista(cCia, self.fldActoEdit.text(), self.inpCorrGenEdit.text(), self.inpFechaEdit.text(), self.inpDireccionEdit.text(), self.efectivaEstateIn[self.cbEfectivaEdit.checkState().value], len(self.lista),self.lista)
             self.cbMesInforme.clear()
             self.cbAnoInforme.clear()
             self.cbMesInforme.addItems(self.database.getMonth())
@@ -436,8 +418,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self, "Error", f"Ha ocurrido un error.\n Código de error: {e}"
             )
             return
-
-
 
     def delete_list(self):
         alerta = QtWidgets.QMessageBox.warning(
@@ -525,9 +505,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             )
             return
 
-
-
-
     def del_vol_to_list(self):
         if self.contentField.currentIndex() == 0:
             self.lista.remove(self.liVols.model().index(self.liVols.currentRow(), 0).data())
@@ -559,7 +536,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def save_list(self):
         try:
-            self.database.addLista(self.inpCorrCia.text(), self.inpActo.text(), self.inpCorrGral.text(), self.inpFecha.text(), self.inpDireccion.text(), self.efectiva, len(self.lista), self.lista)
+            self.database.addLista(self.inpCorrCia.text(), self.inpActo.text(), self.inpCorrGral.text(), self.inpFecha.text(), self.inpDireccion.text(), self.efectivaEstateIn[self.cbEfectiva.checkState().value], len(self.lista), self.lista)
             aviso = QtWidgets.QMessageBox.information(self, "Guardar", "Lista guardada exitosamente")
             self.efectiva = "AB"
             self.clearFields()
@@ -575,7 +552,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def show_app_info(self):
         QtWidgets.QMessageBox.information(self, "Información", f"Versión: {self.information['version']} \nAutor: {self.information['autor']} \n © 2023 por Andrés Bahamondes")
         return
-
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
