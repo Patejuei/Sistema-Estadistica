@@ -83,67 +83,76 @@ class Conexion:
         estadistica = []
         # Incendios
         self.cursor.execute(f"SELECT count(corr_cia) FROM actos WHERE MONTHNAME(fecha) = '{month}' AND YEAR(fecha) = {year} AND acto = 'INCENDIO'")
-        estadistica.append(['INCENDIOS', self.cursor.fetchone()[0]])
+        estadistica.append(['Incendios', self.cursor.fetchone()[0]])
         # Forestales
         self.cursor.execute(f"SELECT count(corr_cia) FROM actos WHERE MONTHNAME(fecha) = '{month}' AND YEAR(fecha) = {year} AND acto = 'I. FOREST.'")
-        estadistica.append(['INCENDIOS FORESTALES', self.cursor.fetchone()[0]])
-        # Estructurales
-        self.cursor.execute(
-            f"SELECT count(corr_cia) FROM actos WHERE MONTHNAME(fecha) = '{month}' AND YEAR(fecha) = {year} AND acto LIKE '10-0-%'")
-        estadistica.append(['ESTRUCTURALES', self.cursor.fetchone()[0]])
-        # Rescates
-        self.cursor.execute(
-            f"SELECT count(corr_cia) FROM actos WHERE MONTHNAME(fecha) = '{month}' AND YEAR(fecha) = {year} AND acto LIKE '10-4-%'")
-        estadistica.append(['RESCATES', self.cursor.fetchone()[0]])
-        # Salvamentos
-        self.cursor.execute(
-            f"SELECT count(corr_cia) FROM actos WHERE MONTHNAME(fecha) = '{month}' AND YEAR(fecha) = {year} AND acto LIKE '10-3-%' AND NOT acto = '10-3-9'")
-        estadistica.append(['SALVAMENTOS', self.cursor.fetchone()[0]])
-        # Materiales Peligrosos
-        self.cursor.execute(
-            f"SELECT count(corr_cia) FROM actos WHERE MONTHNAME(fecha) = '{month}' AND YEAR(fecha) = {year} AND (acto LIKE '10-5-%' OR acto LIKE '10-6-%')")
-        estadistica.append(['MATERIALES PELIGROSOS', self.cursor.fetchone()[0]])
+        estadistica.append(['Incendios Forestales', self.cursor.fetchone()[0]])
         # Llamados de comandancia
         self.cursor.execute(
             f"SELECT count(corr_cia) FROM actos WHERE MONTHNAME(fecha) = '{month}' AND YEAR(fecha) = {year} AND (acto LIKE '10-%' AND acto NOT LIKE '10-9-%' AND NOT acto = '10-3-9')")
-        estadistica.append(['LLAMADOS DE COMANDANCIA', self.cursor.fetchone()[0]])
-        # Otros Servicios
+        estadistica.append(['Llamados de Comandancia', self.cursor.fetchone()[0]])
+        # Estructurales
         self.cursor.execute(
-            f"SELECT count(corr_cia) FROM actos WHERE MONTHNAME(fecha) = '{month}' AND YEAR(fecha) = {year} AND (acto LIKE '10-9-%' OR acto = '10-3-9')")
-        estadistica.append(['OTROS SERVICIOS', self.cursor.fetchone()[0]])
+            f"SELECT count(corr_cia) FROM actos WHERE MONTHNAME(fecha) = '{month}' AND YEAR(fecha) = {year} AND acto LIKE '10-0-%'")
+        estadistica.append(['Claves 10-0', self.cursor.fetchone()[0]])
+        # Rescates
+        self.cursor.execute(
+            f"SELECT count(corr_cia) FROM actos WHERE MONTHNAME(fecha) = '{month}' AND YEAR(fecha) = {year} AND acto LIKE '10-4-%'")
+        estadistica.append(['Rescates', self.cursor.fetchone()[0]])
+        # Salvamentos
+        self.cursor.execute(
+            f"SELECT count(corr_cia) FROM actos WHERE MONTHNAME(fecha) = '{month}' AND YEAR(fecha) = {year} AND acto LIKE '10-3-%' AND NOT acto = '10-3-9'")
+        estadistica.append(['Salvamentos', self.cursor.fetchone()[0]])
+        # Materiales Peligrosos
+        self.cursor.execute(
+            f"SELECT count(corr_cia) FROM actos WHERE MONTHNAME(fecha) = '{month}' AND YEAR(fecha) = {year} AND (acto LIKE '10-5-%' OR acto LIKE '10-6-%')")
+        estadistica.append(['Materiales Peligrosos (10-5, 10-6)', self.cursor.fetchone()[0]])
         # Apoyos
         self.cursor.execute(
             f"SELECT count(corr_cia) FROM actos WHERE MONTHNAME(fecha) = '{month}' AND YEAR(fecha) = {year} AND acto = '10-12'")
-        estadistica.append(['APOYOS A OTROS CUERPOS', self.cursor.fetchone()[0]])
-
+        estadistica.append(['Apoyos a Otros Cuerpos (10-12, 0-11)', self.cursor.fetchone()[0]])
+        # Otros Servicios
+        self.cursor.execute(
+            f"SELECT count(corr_cia) FROM actos WHERE MONTHNAME(fecha) = '{month}' AND YEAR(fecha) = {year} AND (acto LIKE '10-9-%' OR acto = '10-3-9')")
+        estadistica.append(['Otros Servicios', self.cursor.fetchone()[0]])
         # Reuniones
         self.cursor.execute(
             f"SELECT count(corr_cia) FROM actos WHERE MONTHNAME(fecha) = '{month}' AND YEAR(fecha) = {year} AND (acto = 'SS.OO.' OR acto = 'SS.EE')")
-        estadistica.append(['REUNIONES', self.cursor.fetchone()[0]])
+        estadistica.append(['Sesiones', self.cursor.fetchone()[0]])
         # Academias
         self.cursor.execute(
             f"SELECT count(corr_cia) FROM actos WHERE MONTHNAME(fecha) = '{month}' AND YEAR(fecha) = {year} AND acto = 'ACADEMIA'")
-        estadistica.append(['ACADEMIAS', self.cursor.fetchone()[0]])
+        estadistica.append(['Academias', self.cursor.fetchone()[0]])
+        # Total Actos
+        self.cursor.execute(
+            f"SELECT count(corr_cia) FROM actos WHERE MONTHNAME(fecha) = '{month}' AND YEAR(fecha) = {year} AND (acto LIKE '10-%') OR acto in ('INCENDIO', 'I. FOREST')"
+        )
+        estadistica.append(['Total Actos', self.cursor.ferchone()[0]])
+        # Total Listas
+        self.cursor.execute(
+            f"SELECT count(corr_cia) FROM actos WHERE MONTHNAME(fecha) = '{month}' AND YEAR(fecha) = {year} AND NOT (acto in ('C. ADM.','J. OFF', 'CONS. DISC'))"
+        )
+        estadistica.append(['Total Listas', self.cursor.fetchone()[0]])
         # Asistencia Despachos
         self.cursor.execute(
             f"SELECT avg(c_vols) FROM actos WHERE MONTHNAME(fecha) = '{month}' AND YEAR(fecha) = {year} AND (acto LIKE '10-%' OR acto = 'INCENDIO' or acto = 'I. FOREST.')")
-        estadistica.append(['PROMEDIO ASISTENCIA DESPACHOS', self.cursor.fetchone()[0]])
+        estadistica.append(['Promedio Asistencia Actos de Servicio', self.cursor.fetchone()[0]])
         # Asistencia Academias
         self.cursor.execute(
             f"SELECT avg(c_vols) FROM actos WHERE MONTHNAME(fecha) = '{month}' AND YEAR(fecha) = {year} AND acto = 'ACADEMIA'")
-        estadistica.append(['PROMEDIO ASISTENCIA ACADEMIAS', self.cursor.fetchone()[0]])
+        estadistica.append(['Promedio Asistencia Academias', self.cursor.fetchone()[0]])
         # Asistencia Sesiones
         self.cursor.execute(
             f"SELECT avg(c_vols) FROM actos WHERE MONTHNAME(fecha) = '{month}' AND YEAR(fecha) = {year} AND (acto = 'SS.OO.' OR acto = 'SS.EE')")
-        estadistica.append(['PROMEDIO ASISTENCIA REUNIONES', self.cursor.fetchone()[0]])
+        estadistica.append(['Promedio Asistencia Sesiones', self.cursor.fetchone()[0]])
         # Asistencia Citaciones Cuerpo
         self.cursor.execute(
             f"SELECT avg(c_vols) FROM actos WHERE MONTHNAME(fecha) = '{month}' AND YEAR(fecha) = {year} AND (acto = 'DESFILE CB' OR acto = 'ROMERIA CB' or acto = 'SS. SOL. CB')")
-        estadistica.append(['PROMEDIO ASISTENCIA CITACIONES CBPA', self.cursor.fetchone()[0]])
+        estadistica.append(['Promedio Asistencia Citaciones CBPA', self.cursor.fetchone()[0]])
         # Asistencia General
         self.cursor.execute(
             f"SELECT avg(c_vols) FROM actos WHERE MONTHNAME(fecha) = '{month}' AND YEAR(fecha) = {year} AND NOT (acto in ('C. ADM.','J. OFF', 'CONS. DISC'))")
-        estadistica.append(['PROMEDIO ASISTENCIA GENERAL', self.cursor.fetchone()[0]])
+        estadistica.append(['Promedio Asistencia General', self.cursor.fetchone()[0]])
 
 
 
@@ -173,6 +182,10 @@ class Conexion:
         # Forestales
         self.cursor.execute(f"SELECT count(corr_cia) FROM actos WHERE fecha BETWEEN STR_TO_DATE('{fDesde}', '%d-%m-%Y') AND STR_TO_DATE('{fHasta}', '%d-%m-%Y') AND acto = 'I. FOREST.'")
         estadistica.append(['INCENDIOS FORESTALES', self.cursor.fetchone()[0]])
+        # Llamados de comandancia
+        self.cursor.execute(
+            f"SELECT count(corr_cia) FROM actos WHERE fecha BETWEEN STR_TO_DATE('{fDesde}', '%d-%m-%Y') AND STR_TO_DATE('{fHasta}', '%d-%m-%Y') AND acto LIKE '10-%' AND acto NOT LIKE '10-9-%' AND NOT acto = '10-3-9'")
+        estadistica.append(['LLAMADOS DE COMANDANCIA', self.cursor.fetchone()[0]])
         # Estructurales
         self.cursor.execute(
             f"SELECT count(corr_cia) FROM actos WHERE fecha BETWEEN STR_TO_DATE('{fDesde}', '%d-%m-%Y') AND STR_TO_DATE('{fHasta}', '%d-%m-%Y') AND acto LIKE '10-0-%'")
@@ -189,19 +202,14 @@ class Conexion:
         self.cursor.execute(
             f"SELECT count(corr_cia) FROM actos WHERE fecha BETWEEN STR_TO_DATE('{fDesde}', '%d-%m-%Y') AND STR_TO_DATE('{fHasta}', '%d-%m-%Y') AND (acto LIKE '10-5-%' OR acto LIKE '10-6-%')")
         estadistica.append(['MATERIALES PELIGROSOS', self.cursor.fetchone()[0]])
-        # Llamados de comandancia
-        self.cursor.execute(
-            f"SELECT count(corr_cia) FROM actos WHERE fecha BETWEEN STR_TO_DATE('{fDesde}', '%d-%m-%Y') AND STR_TO_DATE('{fHasta}', '%d-%m-%Y') AND acto LIKE '10-%' AND acto NOT LIKE '10-9-%' AND NOT acto = '10-3-9'")
-        estadistica.append(['LLAMADOS DE COMANDANCIA', self.cursor.fetchone()[0]])
-        # Otros Servicios
-        self.cursor.execute(
-            f"SELECT count(corr_cia) FROM actos WHERE fecha BETWEEN STR_TO_DATE('{fDesde}', '%d-%m-%Y') AND STR_TO_DATE('{fHasta}', '%d-%m-%Y') AND (acto LIKE '10-9-%' OR acto = '10-3-9')")
-        estadistica.append(['OTROS SERVICIOS', self.cursor.fetchone()[0]])
         # Apoyos
         self.cursor.execute(
             f"SELECT count(corr_cia) FROM actos WHERE fecha BETWEEN STR_TO_DATE('{fDesde}', '%d-%m-%Y') AND STR_TO_DATE('{fHasta}', '%d-%m-%Y') AND acto = '10-12'")
         estadistica.append(['APOYOS A OTROS CUERPOS', self.cursor.fetchone()[0]])
-
+        # Otros Servicios
+        self.cursor.execute(
+            f"SELECT count(corr_cia) FROM actos WHERE fecha BETWEEN STR_TO_DATE('{fDesde}', '%d-%m-%Y') AND STR_TO_DATE('{fHasta}', '%d-%m-%Y') AND (acto LIKE '10-9-%' OR acto = '10-3-9')")
+        estadistica.append(['OTROS SERVICIOS', self.cursor.fetchone()[0]])
         # Reuniones
         self.cursor.execute(
             f"SELECT count(corr_cia) FROM actos WHERE fecha BETWEEN STR_TO_DATE('{fDesde}', '%d-%m-%Y') AND STR_TO_DATE('{fHasta}', '%d-%m-%Y') AND (acto = 'SS.OO.' OR acto = 'SS.EE')")
@@ -210,6 +218,17 @@ class Conexion:
         self.cursor.execute(
             f"SELECT count(corr_cia) FROM actos WHERE fecha BETWEEN STR_TO_DATE('{fDesde}', '%d-%m-%Y') AND STR_TO_DATE('{fHasta}', '%d-%m-%Y') AND acto = 'ACADEMIA'")
         estadistica.append(['ACADEMIAS', self.cursor.fetchone()[0]])
+        # Total Actos
+        self.cursor.execute(
+            f"SELECT count(corr_cia) FROM actos WHERE fecha BETWEEN STR_TO_DATE('{fDesde}', '%d-%m-%Y') AND STR_TO_DATE('{fHasta}', '%d-%m-%Y') AND (acto LIKE '10-%') OR acto in ('INCENDIO', 'I. FOREST')"
+        )
+        estadistica.append(['Total Actos', self.cursor.ferchone()[0]])
+        # Total Listas
+        self.cursor.execute(
+            f"SELECT count(corr_cia) FROM actos WHERE fecha BETWEEN STR_TO_DATE('{fDesde}', '%d-%m-%Y') AND STR_TO_DATE('{fHasta}', '%d-%m-%Y') AND NOT (acto in ('C. ADM.','J. OFF', 'CONS. DISC'))"
+        )
+        estadistica.append(['Total Listas', self.cursor.fetchone()[0]])
+
         # Asistencia Despachos
         self.cursor.execute(
             f"SELECT avg(c_vols) FROM actos WHERE fecha BETWEEN STR_TO_DATE('{fDesde}', '%d-%m-%Y') AND STR_TO_DATE('{fHasta}', '%d-%m-%Y') AND (acto LIKE '10-%' OR acto = 'INCENDIO' or acto = 'I. FOREST.')")
