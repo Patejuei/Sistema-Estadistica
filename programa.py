@@ -11,7 +11,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         super().__init__()
         self.setupUi(self)
         self.information = {
-            "version" : "1.1.0.5",
+            "version" : "1.1.1.0",
             "autor" : "Andrés Bahamondes Carvajal"
         }
 
