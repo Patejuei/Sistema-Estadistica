@@ -10,12 +10,10 @@ class Conexion:
                                   database=self.data['DataBase'])
         self.cursor = self.conecta.cursor()
 
-    def addLista(self, *params):
-        Corr_Cia, acto, corr_gral, fecha, direccion, lista, cvols, vols = params
-        query = f"INSERT INTO actos VALUES ('{Corr_Cia}', '{acto}', {corr_gral}, STR_TO_DATE('{fecha}','%d-%m-%Y'), '{direccion}', '{lista}', {cvols})"
-        self.cursor.execute(query)
-        for vol in vols:
-            self.cursor.execute(f"INSERT INTO asistencia VALUES (default, '{Corr_Cia}', '{vol}')")
+    def addLista(self, act_data, act_asist):
+        query = "INSERT INTO actos VALUES (%s, %s, %s, %s, %s, %s, %s)"
+        self.cursor.execute(query, act_data)
+        self.cursor.executemany("INSERT INTO asistencia (corr_cia_acto, reg_gral_voluntario) VALUES ( %s, %s)", act_asist)
         self.conecta.commit()
 
     def srcVols(self, source):
@@ -70,7 +68,7 @@ class Conexion:
         for row in self.cursor.fetchall():
             lista.append(list(row))
         for row in lista:
-            self.cursor.execute(f'SELECT count(corr_cia_acto) FROM asistencia INNER JOIN actos a on asistencia.corr_cia_acto = a.corr_cia WHERE MONTHNAME(a.fecha) = "{month}" AND YEAR(a.fecha) = {year} and reg_gral_voluntario = "{row[0]}" AND NOT (a.acto in ("C. ADM.","J. OFF", "CONS. DISC"))')
+            self.cursor.execute(f'SELECT count(corr_cia_acto) FROM asistencia INNER JOIN actos a on asistencia.corr_cia_acto = a.corr_cia WHERE MONTHNAME(a.fecha) = "{month}" AND YEAR(a.fecha) = {year} and reg_gral_voluntario = "{row[0]}"')
             lista[lista.index(row)].append(self.cursor.fetchall()[0][0])
             self.cursor.execute(f'SELECT count(corr_cia) FROM actos WHERE MONTHNAME(fecha) = "{month}" AND YEAR (fecha) = {year} AND NOT (acto in ("C. ADM.","J. OFF", "CONS. DISC"))')
             lista[lista.index(row)].append(row[4] / self.cursor.fetchall()[0][0])
@@ -154,7 +152,7 @@ class Conexion:
         for row in self.cursor.fetchall():
             lista.append(list(row))
         for row in lista:
-            self.cursor.execute(f'SELECT count(corr_cia_acto) FROM asistencia INNER JOIN actos a on asistencia.corr_cia_acto = a.corr_cia WHERE fecha BETWEEN STR_TO_DATE("{fDesde}", "%d-%m-%Y") AND STR_TO_DATE("{fHasta}", "%d-%m-%Y") and reg_gral_voluntario = "{row[0]}" AND NOT (a.acto in ("C. ADM.","J. OFF", "CONS. DISC"))')
+            self.cursor.execute(f'SELECT count(corr_cia_acto) FROM asistencia INNER JOIN actos a on asistencia.corr_cia_acto = a.corr_cia WHERE fecha BETWEEN STR_TO_DATE("{fDesde}", "%d-%m-%Y") AND STR_TO_DATE("{fHasta}", "%d-%m-%Y") and reg_gral_voluntario = "{row[0]}"')
             lista[lista.index(row)].append(self.cursor.fetchall()[0][0])
             self.cursor.execute(f'SELECT count(corr_cia) FROM actos WHERE fecha BETWEEN STR_TO_DATE("{fDesde}", "%d-%m-%Y") AND STR_TO_DATE("{fHasta}", "%d-%m-%Y") AND NOT (acto in ("C. ADM.","J. OFF", "CONS. DISC"))')
             lista[lista.index(row)].append(row[4] / self.cursor.fetchall()[0][0])
@@ -162,6 +160,7 @@ class Conexion:
             lista[lista.index(row)].append(self.cursor.fetchall()[0][0])
             self.cursor.execute(f'SELECT count(corr_cia) FROM actos WHERE fecha BETWEEN STR_TO_DATE("{fDesde}", "%d-%m-%Y") AND STR_TO_DATE("{fHasta}", "%d-%m-%Y") AND lista = "OB"')
             lista[lista.index(row)].append(row[6] / self.cursor.fetchall()[0][0])
+
         self.cursor.execute(f'SELECT * FROM actos WHERE fecha BETWEEN STR_TO_DATE("{fDesde}", "%d-%m-%Y") AND STR_TO_DATE("{fHasta}", "%d-%m-%Y") ORDER BY fecha DESC, corr_cia DESC')
         actos = self.cursor.fetchall()
 
@@ -245,32 +244,6 @@ class Conexion:
         self.cursor.execute(f'SELECT * FROM actos WHERE fecha >= DATE_ADD(CURDATE(), INTERVAL -90 DAY)')
         actos = self.cursor.fetchall()
         return lista, actos
-
-    def send_messageMo(self, month, year):
-        content = open(os.path.abspath('resources/message.html'), 'r').read()
-        style = open(os.path.abspath('resources/messagestyle.html'), 'r').read()
-        yagmail.register(self.data['eMail'], self.data['pass_eMail'])
-        yag = yagmail.SMTP(self.data["eMail"])
-        self.cursor.execute('SELECT reg_gral, nombre, apellidoP, apellidoM, email FROM bomberos WHERE sub_estado = "ACTIVO"')
-        dbrow = self.cursor.fetchall()
-        for row in dbrow:
-            reg_gral, nombre, apellidoP, apellidoM, email = row
-            asunto = f"Asistencia mensual voluntario/a {nombre} {apellidoP}"
-            aquery = f"""SELECT corr_cia, acto, fecha, direccion from actos
-            INNER JOIN asistencia a on actos.corr_cia = a.corr_cia_acto
-            WHERE reg_gral_voluntario = '{reg_gral}'
-            AND MONTHNAME(fecha) = '{month}'
-            AND YEAR(fecha) = {year}"""
-            self.cursor.execute(aquery)
-            alist = self.cursor.fetchall()
-            actos = ""
-            for asis in alist:
-                actos += "<tr>"
-                actos += "<td>" + asis[0] + "</td><td>" + asis[1] + "</td><td>" + asis[2].strftime("%d-%m-%Y") + "</td><td>" + asis[3] + "</td>"
-                actos += "</tr>"
-            contentm = content.format(nombreD=nombre, apellido1D=apellidoP, apellido2D=apellidoM, actos=actos, nombre_oficial=self.data['Nombre'], cargo_oficial=self.data['Cargo'])
-            #yag.send(self.data["eMail"], asunto, style + contentm)
-            yag.send(email, asunto, style + contentm)
 
     def getMonth(self):
         meses = [""]

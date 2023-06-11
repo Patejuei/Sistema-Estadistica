@@ -4,7 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a1b367fd-ac3e-419c-8787-6596d5d4418f" name="Changes" comment="Version 1.1.0.2">
+    <list default="true" id="a1b367fd-ac3e-419c-8787-6596d5d4418f" name="Changes" comment="Version 1.1.1.0">
+      <change afterPath="$PROJECT_DIR$/lib/Acto.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/connection.py" beforeDir="false" afterPath="$PROJECT_DIR$/lib/connection.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/programa.py" beforeDir="false" afterPath="$PROJECT_DIR$/programa.py" afterDir="false" />
@@ -17,6 +18,13 @@
   <component name="ChangesViewManager">
     <option name="groupingKeys">
       <option value="directory" />
+    </option>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
     </option>
   </component>
   <component name="Git.Settings">
@@ -37,6 +45,8 @@
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
     &quot;last_opened_file_path&quot;: &quot;G:/Mi unidad/Proyectos/AyudantesAppGuiV2&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
@@ -52,7 +62,7 @@
     ]
   }
 }</component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Python.programa">
     <configuration name="programa" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="AyudantesAppGuiV2" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -75,9 +85,32 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="pruebas" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="AyudantesAppGuiV2" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/lib" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/lib/pruebas.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
         <item itemvalue="Python.programa" />
+        <item itemvalue="Python.pruebas" />
       </list>
     </recent_temporary>
   </component>
@@ -104,6 +137,24 @@
       <workItem from="1682053275119" duration="2636000" />
       <workItem from="1682604436475" duration="573000" />
       <workItem from="1682614858745" duration="321000" />
+      <workItem from="1682917694113" duration="2321000" />
+      <workItem from="1683923886835" duration="1685000" />
+      <workItem from="1684815875372" duration="646000" />
+      <workItem from="1685567551173" duration="88000" />
+      <workItem from="1685626583755" duration="625000" />
+      <workItem from="1685670726714" duration="156000" />
+      <workItem from="1685670892003" duration="63000" />
+      <workItem from="1685670962505" duration="179000" />
+      <workItem from="1685671150560" duration="966000" />
+      <workItem from="1685673200532" duration="46000" />
+      <workItem from="1685673288721" duration="200000" />
+      <workItem from="1685712002065" duration="630000" />
+      <workItem from="1685714233682" duration="2723000" />
+      <workItem from="1685716995508" duration="796000" />
+      <workItem from="1685736534257" duration="70000" />
+      <workItem from="1685762961646" duration="603000" />
+      <workItem from="1685998883490" duration="7518000" />
+      <workItem from="1686512988539" duration="1123000" />
     </task>
     <task id="LOCAL-00001" summary="Version 1.0.0.0">
       <created>1679892210217</created>
@@ -140,7 +191,14 @@
       <option name="project" value="LOCAL" />
       <updated>1682903339219</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Version 1.1.1.0">
+      <created>1682904200824</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1682904200824</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -162,15 +220,16 @@
     <MESSAGE value="Version 1.0.0.1" />
     <MESSAGE value="Version 1.1.0.2" />
     <MESSAGE value="Version 1.1.0.3" />
-    <option name="LAST_COMMIT_MESSAGE" value="Version 1.1.0.3" />
+    <MESSAGE value="Version 1.1.1.0" />
+    <option name="LAST_COMMIT_MESSAGE" value="Version 1.1.1.0" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/programa.py</url>
-          <line>253</line>
-          <option name="timeStamp" value="2" />
+          <line>541</line>
+          <option name="timeStamp" value="6" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
@@ -184,7 +243,8 @@
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/AyudantesAppGuiV2$connection.coverage" NAME="connection Coverage Results" MODIFIED="1681685491771" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/lib" />
-    <SUITE FILE_PATH="coverage/AyudantesAppGuiV2$programa.coverage" NAME="programa Coverage Results" MODIFIED="1682615458571" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/AyudantesAppGuiV2$pruebas.coverage" NAME="pruebas Coverage Results" MODIFIED="1686019164639" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/lib" />
+    <SUITE FILE_PATH="coverage/AyudantesAppGuiV2$programa.coverage" NAME="programa Coverage Results" MODIFIED="1686513995740" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/AyudantesAppGuiV2$programa__1_.coverage" NAME="programa (1) Coverage Results" MODIFIED="1679889945711" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

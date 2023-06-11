@@ -1,5 +1,6 @@
 from lib.ui_interface import Ui_MainWindow
 from lib.connection import Conexion
+from lib.Acto import Acto
 from PySide6 import QtWidgets, QtCore, QtGui
 import sys
 import os.path
@@ -11,7 +12,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         super().__init__()
         self.setupUi(self)
         self.information = {
-            "version" : "1.1.1.0",
+            "version" : "1.1.2.0",
             "autor" : "Andrés Bahamondes Carvajal"
         }
 
@@ -116,7 +117,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                             "Direccion", "Lista", "Cant. Vols."]
         self.header = ["Reg. Gral", "Nombre", "Apellido Paterno", "Apellido Materno", "Listas totales", "Asistencia General",
                   "Listas Obligatorias",
-                  "Asistencia Obligatorias"]
+                  "Asistencia Obligatorias", "Otros Abonos"]
 
         self.informesPath = os.path.abspath('informes\\asistencia.xlsx')
         self.cbMesInforme.addItems(self.database.getMonth())
@@ -125,7 +126,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.btnGenResEsp.clicked.connect(self.resumenEspecifico)
         self.btnInfo90Dias.clicked.connect(self.informe90dias)
         self.btnGenArr.clicked.connect(self.arrastre)
-        self.btnSendResMen.clicked.connect(self.enviarCorreos)
         self.btnGenInfoP.clicked.connect(self.informePersonal)
         completer = QtWidgets.QCompleter(self.database.getVolsInfoPers())
         self.fldInfoPersonal.setCompleter(completer)
@@ -270,21 +270,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             )
             return
 
-    def enviarCorreos(self):
-        alerta = QtWidgets.QMessageBox.warning(
-            self, "Aviso", "Estará a punto de enviar los resúmenes individuales a los correos.\n ¿Desea Proceder?", buttons=QtWidgets.QMessageBox.Apply | QtWidgets.QMessageBox.Cancel)
-        if alerta == QtWidgets.QMessageBox.Apply:
-            try:
-                self.database.send_messageMo(self.cbMesInforme.currentText(), self.cbAnoInforme.currentText())
-                aviso = QtWidgets.QMessageBox.information(self, 'Enviando', 'Resumen enviado a los correos')
-            except Exception as e:
-                dialogo = QtWidgets.QMessageBox.warning(
-                    self, "Error", f"Ha ocurrido un error.\n Código de error: {e}"
-                )
-                return
-        else:
-            return
-
     def arrastre(self):
         try:
             arrastrePath = self.getSaveFile()
@@ -406,7 +391,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def edit_list(self):
         try:
             cCia = self.liListsView.model().index(self.liListsView.currentRow(), 0).data()
-            self.database.editLista(cCia, self.fldActoEdit.text(), self.inpCorrGenEdit.text(), self.inpFechaEdit.text(), self.inpDireccionEdit.text(), self.efectivaEstateIn[self.cbEfectivaEdit.checkState().value], len(self.lista),self.lista)
+            lista = Acto(cCia, self.fldActoEdit.text(), self.inpCorrGenEdit.text(), self.inpFechaEdit.text(), self.inpDireccionEdit.text(), self.efectivaEstateIn[self.cbEfectivaEdit.checkState().value], len(self.lista),self.lista)
+            self.database.editLista()
             self.cbMesInforme.clear()
             self.cbAnoInforme.clear()
             self.cbMesInforme.addItems(self.database.getMonth())
@@ -536,9 +522,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def save_list(self):
         try:
-            self.database.addLista(self.inpCorrCia.text(), self.inpActo.text(), self.inpCorrGral.text(), self.inpFecha.text(), self.inpDireccion.text(), self.efectivaEstateIn[self.cbEfectiva.checkState().value], len(self.lista), self.lista)
+            acto = Acto(self.inpCorrCia.text(), self.inpActo.text(), self.inpCorrGral.text(), self.inpFecha.text(), self.inpDireccion.text(), self.efectivaEstateIn[self.cbEfectiva.checkState().value], len(self.lista), self.lista)
+            self.database.addLista(acto.get_data(), acto.get_Vols())
             aviso = QtWidgets.QMessageBox.information(self, "Guardar", "Lista guardada exitosamente")
-            self.efectiva = "AB"
             self.clearFields()
         except Exception as e:
             dialogo = QtWidgets.QMessageBox.warning(
