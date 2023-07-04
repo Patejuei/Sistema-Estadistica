@@ -1,20 +1,27 @@
 import mysql.connector as db
 import yagmail
 import os
+from dotenv import load_dotenv
 class Conexion:
     def __init__(self):
-        self.data = eval(open(os.path.abspath('params.txt'), 'r').read())
-        self.conecta = db.connect(host=self.data['Host'],
-                                  user=self.data['User'],
-                                  password=self.data['Password'],
-                                  database=self.data['DataBase'])
-        self.cursor = self.conecta.cursor()
+        load_dotenv()
 
-    def addLista(self, act_data, act_asist):
-        query = "INSERT INTO actos VALUES (%s, %s, %s, %s, %s, %s, %s)"
-        self.cursor.execute(query, act_data)
-        self.cursor.executemany("INSERT INTO asistencia (corr_cia_acto, reg_gral_voluntario) VALUES ( %s, %s)", act_asist)
-        self.conecta.commit()
+        db_data = {
+            'host' : os.getenv('DB_HOST'),
+            'port' : os.getenv('DB_PORT'),
+            'user' : os.getenv('DB_USER'),
+            'pass' : os.getenv('DB_PASSWORD'),
+            'database' : os.getenv('DB_NAME')
+        }
+        self.data = eval(open(os.path.abspath('params.txt'), 'r').read())
+        self.connection = db.connect(
+            host = db_data['host'],
+            port = db_data['port'],
+            user = db_data['user'],
+            password = db_data['pass'],
+            database = db_data['database']
+        )
+        self.cursor = self.connection.cursor()
 
     def srcVols(self, source):
         self.cursor.execute(f"SELECT reg_gral, nombre, apellidoP, apellidoM FROM bomberos WHERE reg_gral LIKE '{source}%'")
@@ -27,7 +34,7 @@ class Conexion:
         dv = rut[1]
         rut = int(rut[0])
         self.cursor.execute(f'INSERT INTO bomberos VALUES ("{rGral}", "{nombre}", "{apellidoP}", "{apellidoM}", "{email}", {rut}, "{dv}", {rCia}, STR_TO_DATE("{fIngreso}", "%d-%m-%Y"), "{sub_estado}")')
-        self.conecta.commit()
+        self.connection.commit()
 
     def srcLista(self, srcLista):
         self.cursor.execute(f'SELECT corr_cia, DATE_FORMAT(fecha, "%d-%m-%Y"), acto, direccion FROM actos WHERE corr_cia like "{srcLista}%" OR direccion LIKE "%{srcLista}%" ORDER BY fecha desc, corr_cia DESC')
@@ -40,14 +47,6 @@ class Conexion:
         result = self.cursor.fetchall()
         return result
 
-    def editLista(self, *params):
-        corr_cia, acto, corr_gral, fecha, direccion, lista, cvols, vols = params
-        self.cursor.execute(
-            f'UPDATE actos SET acto="{acto}", fecha=STR_TO_DATE("{fecha}","%d-%m-%Y") , corr_gral={corr_gral}, direccion="{direccion}", lista="{lista}", c_vols={cvols} WHERE corr_cia = "{corr_cia}"')
-        self.cursor.execute(f'DELETE FROM asistencia WHERE corr_cia_acto = "{corr_cia}"')
-        for vol in vols:
-            self.cursor.execute(f'INSERT INTO asistencia VALUES (default, "{corr_cia}", "{vol}")')
-        self.conecta.commit()
 
     def addVolLista(self, vol):
         self.cursor.execute(f'SELECT reg_gral, nombre, apellidoP, apellidoM FROM bomberos WHERE reg_gral = "{vol}"')
@@ -60,7 +59,7 @@ class Conexion:
         dv = rut[1]
         rut = int(rut[0])
         self.cursor.execute(f'UPDATE bomberos SET reg_gral = "{rGral}",nombre = "{nombre}", apellidoP = "{apellidoP}", apellidoM = "{apellidoM}", email = "{email}", rut = {rut}, dv = "{dv}", reg_cia = {rCia}, f_ingreso = STR_TO_DATE("{fIngreso}", "%d-%m-%Y"), sub_estado = "{sub_estado}" WHERE reg_gral = "{rGrali}"')
-        self.conecta.commit()
+        self.connection.commit()
 
     def resMensual(self, month, year):
         lista = []
@@ -267,7 +266,7 @@ class Conexion:
     def delLista(self, cCia):
         self.cursor.execute(f'DELETE FROM asistencia WHERE corr_cia_acto = "{cCia}"')
         self.cursor.execute(f'DELETE FROM actos WHERE corr_cia = "{cCia}"')
-        self.conecta.commit()
+        self.connection.commit()
 
     def getVols(self, rGral):
         self.cursor.execute(f'SELECT * FROM bomberos WHERE reg_gral = "{rGral}"')
@@ -328,7 +327,7 @@ class Conexion:
         cLic, n_reg, f_desde, f_hasta, motivo, aprobado = args
         query = f'INSERT INTO licencias VALUES ("{n_reg}", STR_TO_DATE("{f_desde}" , "%d-%m-%Y"), STR_TO_DATE("{f_hasta}", "%d-%m-%Y"), "{motivo}", "{aprobado}", "{cLic}")'
         self.cursor.execute(query)
-        self.conecta.commit()
+        self.connection.commit()
         return
 
     #Retornar Nombre para el campo
@@ -357,12 +356,12 @@ class Conexion:
         cLic, n_reg, f_desde, f_hasta, motivo, aprobado = licencia
         query = f'UPDATE licencias SET nro_registro = "{n_reg}", f_desde = STR_TO_DATE("{f_desde}" , "%d-%m-%Y"),f_hasta = STR_TO_DATE("{f_hasta}", "%d-%m-%Y"), motivo = "{motivo}", aprobado = "{aprobado}", corr_Lic = "{cLic}")'
         self.cursor.execute(query)
-        self.conecta.commit()
+        self.connection.commit()
         return
 
     # Eliminar Licencia
     def deleteLicencia(self, corr_Lic):
         sql = f'DELETE FROM licencias WHERE corr_Lic = "{corr_Lic}"'
         self.cursor.execute(sql)
-        self.conecta.commit()
+        self.connection.commit()
 

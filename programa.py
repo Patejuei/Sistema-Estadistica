@@ -1,6 +1,7 @@
 from lib.ui_interface import Ui_MainWindow
 from lib.connection import Conexion
 from lib.Acto import Acto
+from lib.Informe import Informe
 from PySide6 import QtWidgets, QtCore, QtGui
 import sys
 import os.path
@@ -117,7 +118,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                             "Direccion", "Lista", "Cant. Vols."]
         self.header = ["Reg. Gral", "Nombre", "Apellido Paterno", "Apellido Materno", "Listas totales", "Asistencia General",
                   "Listas Obligatorias",
-                  "Asistencia Obligatorias", "Otros Abonos"]
+                  "Asistencia Obligatorias"]
 
         self.informesPath = os.path.abspath('informes\\asistencia.xlsx')
         self.cbMesInforme.addItems(self.database.getMonth())
@@ -392,7 +393,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         try:
             cCia = self.liListsView.model().index(self.liListsView.currentRow(), 0).data()
             lista = Acto(cCia, self.fldActoEdit.text(), self.inpCorrGenEdit.text(), self.inpFechaEdit.text(), self.inpDireccionEdit.text(), self.efectivaEstateIn[self.cbEfectivaEdit.checkState().value], len(self.lista),self.lista)
-            self.database.editLista()
+            lista.editLista()
             self.cbMesInforme.clear()
             self.cbAnoInforme.clear()
             self.cbMesInforme.addItems(self.database.getMonth())
@@ -523,7 +524,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def save_list(self):
         try:
             acto = Acto(self.inpCorrCia.text(), self.inpActo.text(), self.inpCorrGral.text(), self.inpFecha.text(), self.inpDireccion.text(), self.efectivaEstateIn[self.cbEfectiva.checkState().value], len(self.lista), self.lista)
-            self.database.addLista(acto.get_data(), acto.get_Vols())
+            acto.addLista()
             aviso = QtWidgets.QMessageBox.information(self, "Guardar", "Lista guardada exitosamente")
             self.clearFields()
         except Exception as e:
