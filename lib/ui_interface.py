@@ -178,6 +178,7 @@ class Ui_MainWindow(object):
 
         self.inpCorrCia = QLineEdit(self.pageInsert)
         self.inpCorrCia.setObjectName(u"inpCorrCia")
+        self.inpCorrCia.setMaxLength(7)
 
         self.horizontalLayout_6.addWidget(self.inpCorrCia)
 
@@ -203,7 +204,7 @@ class Ui_MainWindow(object):
 
         self.inpActo = QLineEdit(self.pageInsert)
         self.inpActo.setObjectName(u"inpActo")
-        self.inpActo.setMaxLength(15)
+        self.inpActo.setMaxLength(10)
 
         self.horizontalLayout_6.addWidget(self.inpActo)
 
@@ -219,6 +220,7 @@ class Ui_MainWindow(object):
 
         self.inpDireccion = QLineEdit(self.pageInsert)
         self.inpDireccion.setObjectName(u"inpDireccion")
+        self.inpDireccion.setMaxLength(100)
 
         self.horizontalLayout_7.addWidget(self.inpDireccion)
 

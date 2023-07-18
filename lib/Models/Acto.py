@@ -1,5 +1,5 @@
 import datetime
-from lib.connection import Conexion
+from lib.Models.connection import Conexion
 class Acto(Conexion):
     def __init__(self, ccia, acto, cgral, date, address, list, cvol, vols):
         super().__init__()
@@ -7,23 +7,20 @@ class Acto(Conexion):
         self.act_type = acto
         self.general_cor = self.Filter_Int(cgral)
         self.date = self.Filter_Date(date)
-        self.address = self.Filter_Adrress(address)
+        self.address = self.Filter_Address(address)
         self.list = list
         self.qty_vols = cvol
         self.vols = vols
 
-    def Filter_Adrress(self, address):
+    @staticmethod
+    def Filter_Address(address):
         address = address.upper()
-        address = address.replace("/", "ESQ")
+        address = address.replace("ESQ", "/")
 
         return address
 
-    def Filter_Date(self, date):
-        day, month, year = date.split("-")
-        date = datetime.date(int(year), int(month), int(day))
-        return date
-
-    def Filter_Int(self, num):
+    @staticmethod
+    def Filter_Int(num):
         if num == "":
             return 0
         else:
