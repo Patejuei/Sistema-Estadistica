@@ -3,6 +3,7 @@ from lib.Models.connection import Conexion
 from lib.Models.Acto import Acto
 from lib.Models.Voluntario import Voluntario
 from lib.Models.Informe import Informe
+from lib.Models.Licencias import Licencia
 from PySide6 import QtWidgets, QtCore
 import sys
 import os.path
@@ -11,190 +12,240 @@ import pandas as pd
 
 
 class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
+    information = {
+        "version": "1.1.2.0",
+        "autor": "Andrés Bahamondes Carvajal"
+    }
+    efectiva_estate_in = {2: "OB", 0: "AB"}
+    lista = set()
+    _second_class_acts = {
+        'Compañía': ['SS.EE', 'SS.OO.', 'ACADEMIA', 'J. OFF.', 'C. ADM.', 'CONS. DISC.', 'ROMERÍA', 'COMP. INT.',
+                     'G. PREVENT', 'O. CITAC.'],
+        'CB': ['DESFILE CB', 'DESFILE', 'ROMERÍA CB', 'SS. EE. CB', 'FUNERAL', 'INCENDIO', 'I. FOREST.',
+               'O. CITAC. CB'],
+        '10-0': ['10-0-1', '10-0-2', '10-0-3', '10-0-4', '10-0-5', '10-0-6', '10-0-7'],
+        '10-1': ['10-1-1', '10-1-2', '10-1-3'],
+        '10-2': ['10-2-1', '10-2-2', '10-2-3'],
+        '10-3': ['10-3-1', '10-3-2', '10-3-3', '10-3-4', '10-3-5', '10-3-6', '10-3-7', '10-3-8', '10-3-9',
+                 '10-3-10'],
+        '10-4': ['10-4-1', '10-4-2', '10-4-3', '10-4-4', '10-4-5'],
+        '10-5': ['10-5-1', '10-5-2', '10-5-3'],
+        '10-6': ['10-6-1', '10-6-2', '10-6-3', '10-6-4', '10-6-5'],
+        '10-7': ['10-7-1'],
+        '10-8': ['10-8-1', '10-8-2', '10-8-3', '10-8-4'],
+        '10-9': ['10-9-1', '10-9-2', '10-9-3', '10-9-4', '10-9-5', '10-9-6', '10-9-7', '10-9-8'],
+        '10-10': ['10-10-1', '10-10-2'],
+        '10-11': ['10-11'],
+        '10-12': ['10-12', '0-11'],
+        '10-13': ['10-13'],
+        '10-14': ['10-14'],
+        '10-15': ['10-15'],
+        '10-16': ['10-16'],
+        '10-17': ['10-17-1', '10-17-2', '10-17-3']
+    } # Conjunto de subclasificación de los actos
+    efectiva_edit_estates = {
+        2: "OB",
+        0: "AB"
+    }   # Diccionario de estados para CheckBox de UI de edición para escritura
+    cb_efectiva_edit_estates = {
+        "OB": QtCore.Qt.CheckState.Checked,
+        "AB": QtCore.Qt.CheckState.Unchecked
+    } # Diccionario de estados para ChackBox de Ui de Edición para lectura
+    license_aproved = 'Pendiente' # Estado inicial de las Licencias
+    license_states = {
+        2: 'Aprobado',
+        0: 'Pendiente',
+        1: 'Rechazado'
+    } # Diccionario de estados para CheckBox de UI de Gestión de licencias para escritura
+    cb_license_states = {'Aprobado': QtCore.Qt.CheckState.Checked,
+                         'Pendiente': QtCore.Qt.CheckState.Unchecked,
+                         'Rechazado': QtCore.Qt.CheckState.PartiallyChecked
+                         } # Diccionario de estados para CHeckBox de UI de Gestión de licencias para lectura
+
     def __init__(self):
         super().__init__()
-        self.bombero = None
-        info = Informe(self)
         self.setupUi(self)
-        self.information = {
-            "version": "1.1.2.0",
-            "autor": "Andrés Bahamondes Carvajal"
+        self.unidades_asistentes = []
+        self.ingreso_carros = {
+            'B9' : self.cbInsertB9,
+            'M9' : self.cbInsertM9,
+            'UT9' : self.cbInsertUT9,
         }
-
+        self.edicion_carros = {
+            'B9' : self.cbEditB9,
+            'M9' : self.cbEditM9,
+            'UT9' : self.cbEditUT9
+        }
+        # Probar conexión a base de datos
         try:
             self.database = Conexion()
         except Exception as e:
             dialogo = QtWidgets.QMessageBox.warning(
                 self, "Error", f"Ha ocurrido un error conectandose a la base de datos.\n Código de error: {e}"
             )
-
         # Mostrar interfaz de ingreso
-        self.btnInsertList.clicked.connect(lambda: self.contentField.setCurrentIndex(0))
+        self.btnInsertList.clicked.connect(self.setInsertListUI)
         # Mostrar interfaz de edicion
-        self.btnViewList.clicked.connect(lambda: self.contentField.setCurrentIndex(1))
+        self.btnViewList.clicked.connect(self.setViewListUI)
         # Mostrar interfaz de informes
-        self.btnGenInforms.clicked.connect(lambda: self.contentField.setCurrentIndex(2))
+        self.btnGenInforms.clicked.connect(self.setGenResumeUI)
         # Mostrar interfaz de voluntarios
-        self.btnAdminVols.clicked.connect(lambda: self.contentField.setCurrentIndex(3))
+        self.btnAdminVols.clicked.connect(self.setFirefighterDataUI)
         # Mostrar interfaz de Licencias
-        self.btnLicencias.clicked.connect(lambda: self.contentField.setCurrentIndex(4))
-
+        self.btnLicencias.clicked.connect(self.setLicenceUI)
         # Mostrar info
         self.btnInfo.clicked.connect(self.show_app_info)
         # Mostrar ayuda
         self.btnHelp.clicked.connect(self.show_help_manual)
-        self.lista = set()
-        self.contentField.setCurrentIndex(0)
 
-        self.btnInsertList.clicked.connect(self.clearFields)
-        self.btnViewList.clicked.connect(self.buscar_listas)
+        self.setInsertListUI() # Iniciar la aplicación con la UI de ingreso de Listas
 
         # Interfaz de Ingreso
-        self.efectivaEstateIn = {2: "OB", 0: "AB"}
-        _actsElements = {'SS.EE', 'SS.OO.', 'ACADEMIA', 'J. OFF', 'INCENDIO', 'I. FOREST.', 'C. ADM.', "CONS. DISC",
-                         'DESFILE CB', 'SS. EE. CB', 'ROMERIA CB', 'O. CITACION', 'G. PREVENT',
-                         '10-0-1', '10-0-2', '10-0-3', '10-0-4', '10-0-5', '10-0-6', '10-0-7', '10-0-8',
-                         '10-1-1', '10-1-2', '10-1-3',
-                         '10-2-1', '10-2-2', '10-2-3',
-                         '10-3-1', '10-3-2', '10-3-3', '10-3-4', '10-3-5', '10-3-6', '10-3-7', '10-3-8', '10-3-9',
-                         '10-3-10',
-                         '10-4-1', '10-4-2', '10-4-3', '10-4-4', '10-4-5',
-                         '10-5-1', '10-5-2', '10-5-3',
-                         '10-6-1', '10-6-2', '10-6-3', '10-6-4',
-                         '10-7-1',
-                         '10-8-1', '10-8-2', '10-8-3', '10-8-4',
-                         '10-9-1', '10-9-2', '10-9-3', '10-9-4', '10-9-5', '10-9-6', '10-9-7', '10-9-8',
-                         '10-10-1', '10-10-2',
-                         '10-11', '10-12', '10-13', '10-14', '10-15', '10-16',
-                         '10-17-1', '10-17-2', '10-17-3'}
-        actos = QtWidgets.QCompleter(_actsElements)
-        actos.setCaseSensitivity(QtWidgets.QCompleter.caseSensitivity(actos).CaseInsensitive)
-        self.inpActo.setCompleter(actos)
-        self.lblTotalLista.setText(str(len(self.lista)))
-        self.liVols.setColumnCount(2)
-        self.liVols.setHorizontalHeaderLabels(['Registro General', 'Nombre'])
-        self.liVols.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
-        self.liVols.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
-        self.liVols.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
+        # Configuración de inicio
+        self.cb_actC1.currentTextChanged.connect(lambda: self.setSubClassList(self.cb_actC1, self.cb_actC2))
         header = self.liVols.horizontalHeader()
         header.setSectionResizeMode(0, QtWidgets.QHeaderView.ResizeMode.ResizeToContents)
         header.setSectionResizeMode(1, QtWidgets.QHeaderView.ResizeMode.Stretch)
+        self.lblTotalLista.setText(str(len(self.lista))) # Actualización de la cantidad de voluntarios
+        # Añadir voluntarios a la lista de asistencia
         self.btnAddVol.clicked.connect(lambda: self.add_vol_to_list(self.inpVol.text()))
         self.inpVol.returnPressed.connect(lambda: self.add_vol_to_list(self.inpVol.text()))
+        # Conexión de botones
         self.btnDelVol.clicked.connect(self.del_vol_to_list)
         self.btnSave.clicked.connect(self.save_list)
 
         # Interfaz de Edicion
-        self.efectivaEditEstates = {2: "OB", 0: "AB"}
-        self.cbEfectivaEditEstates = {"OB": QtCore.Qt.CheckState.Checked, "AB": QtCore.Qt.CheckState.Unchecked}
-        self.liListsView.setColumnCount(4)
-        self.liListsView.setHorizontalHeaderLabels(['Correlativo de Compañía', 'Fecha', 'Acto', 'Dirección'])
-        self.buscar_listas()
-        self.inpSearchList.textChanged.connect(self.buscar_listas)
+        # Configuración inicial
         headerSrcList = self.liListsView.horizontalHeader()
         headerSrcList.setSectionResizeMode(0, QtWidgets.QHeaderView.ResizeMode.ResizeToContents)
         headerSrcList.setSectionResizeMode(1, QtWidgets.QHeaderView.ResizeMode.ResizeToContents)
         headerSrcList.setSectionResizeMode(2, QtWidgets.QHeaderView.ResizeMode.ResizeToContents)
         headerSrcList.setSectionResizeMode(3, QtWidgets.QHeaderView.ResizeMode.Stretch)
-        self.liListsView.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
-        self.liListsView.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
-        self.liListsView.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
-        self.liListsView.selectionModel().selectionChanged.connect(self.getActo)
-        self.liVolsEdit.setColumnCount(2)
-        self.liVolsEdit.setHorizontalHeaderLabels(['Registro General', 'Nombre'])
         headerEditList = self.liVolsEdit.horizontalHeader()
         headerEditList.setSectionResizeMode(0, QtWidgets.QHeaderView.ResizeMode.ResizeToContents)
         headerEditList.setSectionResizeMode(1, QtWidgets.QHeaderView.ResizeMode.Stretch)
-        self.liVolsEdit.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
-        self.liVolsEdit.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
-        self.liVolsEdit.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
-        self.inpAddVolEdit.returnPressed.connect(lambda: self.add_vol_to_list(self.inpAddVolEdit.text()))
+
+        # Conexión de campo de búsqueda
+        self.inpSearchList.textChanged.connect(self.buscar_listas)
+        # Conexión de selección de la tabla
+        self.liListsView.selectionModel().selectionChanged.connect(self.getActo)
+        # Configuración para edición de los actos
+        self.cb_catAct.currentTextChanged.connect(lambda: self.setSubClassList(self.cb_catAct, self.cb_espAct)) # Editar clasificación del acto
+        self.inpAddVolEdit.returnPressed.connect(lambda: self.add_vol_to_list(self.inpAddVolEdit.text())) # Añadir voluntarios a la tabla de asistentes con la tecla Enter
+        # Conexión de botones
         self.btnAddVol_2.clicked.connect(lambda: self.add_vol_to_list(self.inpAddVolEdit.text()))
         self.btnDelVol_2.clicked.connect(self.del_vol_to_list)
         self.btnDeleteEdit.clicked.connect(self.delete_list)
         self.btnSaveEdit.clicked.connect(self.edit_list)
-        self.fldActoEdit.setCompleter(actos)
 
         # Interfaz de Informes
-        self.headeractos = ["Correlativo Compañia", "Tipo de Acto", "Correlativo General",
-                            "Fecha",
-                            "Direccion", "Lista", "Cant. Vols."]
-        self.header = ["Reg. Gral", "Nombre", "Apellido Paterno", "Apellido Materno", "Listas totales",
-                       "Asistencia General",
-                       "Listas Obligatorias",
-                       "Asistencia Obligatorias"]
-
-        self.informesPath = os.path.abspath('informes\\asistencia.xlsx')
-        meses = {"Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre",
-                 "Noviembre", "Diciembre"}
-        self.cbMesInforme.addItems(meses)
-        self.cbAnoInforme.addItems(self.database.getYear())
+        # Configuración inicial
+        completer = QtWidgets.QCompleter(self.database.getVolsInfoPers())
+        self.fldInfoPersonal.setCompleter(completer)
+        # Conexión de botones
         self.btnResMen.clicked.connect(self.resumenMensual)
         self.btnGenResEsp.clicked.connect(self.resumenEspecifico)
         self.btnInfo90Dias.clicked.connect(self.informe90dias)
-        self.btnGenArr.clicked.connect(self.arrastre)
-        self.btnGenInfoP.clicked.connect(self.informePersonal)
-        completer = QtWidgets.QCompleter(self.database.getVolsInfoPers())
-        self.fldInfoPersonal.setCompleter(completer)
+        # self.btnGenArr.clicked.connect(self.arrastre)
+        self.btnGetInfoP.clicked.connect(self.informePersonal)
 
         # Interfaz de Administracion
-        self.tblAdminVols.setColumnCount(2)
-        self.tblAdminVols.setHorizontalHeaderLabels(['N° Registro', 'Nombre'])
-        self.buscar_bomberos()
+        # Configuración inicial
         self.tblAdminVols.horizontalHeader().setSectionResizeMode(0, QtWidgets.QHeaderView.ResizeMode.ResizeToContents)
         self.tblAdminVols.horizontalHeader().setSectionResizeMode(1, QtWidgets.QHeaderView.ResizeMode.Stretch)
-        self.tblAdminVols.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
-        self.tblAdminVols.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
-        self.tblAdminVols.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
+        # Conexión de campo de búsqueda
         self.fldSrcAdminVols.textChanged.connect(self.buscar_bomberos)
+        # Conexión de selección de la tabla
         self.tblAdminVols.selectionModel().selectionChanged.connect(self.getBombero)
+        # Conexión de botones
         self.btnEditVol.clicked.connect(self.editar_vol)
         self.btnAddVol_3.clicked.connect(self.insert_vol)
-        self.cbSubEstado.addItems(['ACTIVO', 'SUSPENDIDO', 'RENUNCIADO', 'SEPARADO', 'EXPULSADO'])
 
         # Interfaz Licencias
+        # Configuración inicial
         self.cbVBCapitan.setTristate(True)
-        self.LicenseAproved = 'Pendiente'
-        self.LicenseStates = {2: 'Aprobado', 0: 'Pendiente', 1: 'Rechazado'}
-        self.CBLicenseStates = {'Aprobado': QtCore.Qt.CheckState.Checked, 'Pendiente': QtCore.Qt.CheckState.Unchecked,
-                                'Rechazado': QtCore.Qt.CheckState.PartiallyChecked}
-        self.tblLicencias.setColumnCount(4)
-        self.tblLicencias.setHorizontalHeaderLabels(['Correlativo', 'Nombre', 'Fecha Desde', 'Fecha Hasta'])
-        self.buscarLicencias()
         self.tblLicencias.horizontalHeader().setSectionResizeMode(0, QtWidgets.QHeaderView.ResizeMode.ResizeToContents)
         self.tblLicencias.horizontalHeader().setSectionResizeMode(1, QtWidgets.QHeaderView.ResizeMode.Stretch)
         self.tblLicencias.horizontalHeader().setSectionResizeMode(2, QtWidgets.QHeaderView.ResizeMode.ResizeToContents)
         self.tblLicencias.horizontalHeader().setSectionResizeMode(3, QtWidgets.QHeaderView.ResizeMode.ResizeToContents)
-        self.tblLicencias.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
-        self.tblLicencias.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
-        self.tblLicencias.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
+        # Conexión de campo de búsqueda
         self.inpSrcLic.textChanged.connect(self.buscarLicencias)
+        # Conexión de selección en la tabla
         self.tblLicencias.selectionModel().selectionChanged.connect(self.getLicencia)
         self.inpRegLic.textChanged.connect(self.buscarNombre)
+        # Conexión de botones
         self.btnSaveLic.clicked.connect(self.saveLicencia)
         self.btnUpdateLic.clicked.connect(self.updateLicencia)
-        self.btnNullLic.clicked.connect(self.borrarLicencia)
+        self.btnClLic.clicked.connect(self.limpiarLicencia)
 
-    def borrarLicencia(self):
-        alerta = QtWidgets.QMessageBox.warning(
-            self, "Aviso", "¿Seguro que desea anular la licencia?",
-            buttons=QtWidgets.QMessageBox.Apply | QtWidgets.QMessageBox.Cancel
-        )
-        if alerta == QtWidgets.QMessageBox.Apply:
-            try:
-                self.database.deleteLicencia(self.inpCorrLic.text())
-                self.buscarLicencias()
-                QtWidgets.QMessageBox.information(self, "Licencias", "Licencia anulada con éxito")
-            except Exception as e:
-                dialogo = QtWidgets.QMessageBox.warning(
-                    self, "Error", f"Ha ocurrido un error.\n Código de error: {e}"
-                )
+    def get_carros(self):
+        self.unidades_asistentes.clear()
+        if self.contentField.currentIndex() == 0:
+            for key, value in self.ingreso_carros.items():
+                if value.isChecked():
+                    self.unidades_asistentes.append(key)
+        elif self.contentField.currentIndex() == 1:
+            for key, value in self.edicion_carros.items():
+                if value.isChecked():
+                    self.unidades_asistentes.append(key)
+
+    def set_carros(self, carros):
+        carros = carros.split(',')
+        for key, value in self.edicion_carros.items():
+            if key not in carros:
+                value.setCheckState(QtCore.Qt.CheckState.Unchecked)
+            else:
+                value.setCheckState(QtCore.Qt.CheckState.Checked)
+
+
+    def filter_Act(self, act):
+        for key, values in self._second_class_acts.items():
+            if act in values:
+                return key
+
+    def setSubClassList(self, clave, subclave):
+        subclave.clear()
+        subclave.addItems(self._second_class_acts[clave.currentText()])
+
+    def setInsertListUI(self):
+        self.database.connection.close()
+        self.contentField.setCurrentIndex(0)
+        self.database.connection.connect()
+        self.clearFields()
+
+    def setViewListUI(self):
+        self.database.connection.close()
+        self.contentField.setCurrentIndex(1)
+        self.buscar_listas()
+
+    def setGenResumeUI(self):
+        self.database.connection.close()
+        self.contentField.setCurrentIndex(2)
+        self.database.connection.connect()
+        self.cbAnoInforme.clear()
+        self.cbAnoInforme.addItems(self.database.getYear())
+
+    def setFirefighterDataUI(self):
+        self.database.connection.close()
+        self.contentField.setCurrentIndex(3)
+        self.buscar_bomberos()
+
+    def setLicenceUI(self):
+        self.database.connection.close()
+        self.contentField.setCurrentIndex(4)
+        self.buscarLicencias()
+
+    def limpiarLicencia(self):
+        self.inpCorrLic.clear()
+        self.inpRegLic.clear()
+        self.txtMotivoLic.clear()
 
     def updateLicencia(self):
         try:
-            self.database.licenciaUpdate(self.inpCorrLic.text(), self.inpRegLic.text(), self.dateDesdeLic.text(),
-                                         self.dateHastaLic.text(), self.txtMotivoLic.toPlainText(),
-                                         self.LicenseStates[self.cbVBCapitan.checkState().value])
+            licencia = Licencia(self.inpCorrLic.text(), self.inpRegLic.text(), self.dateDesdeLic.text(),
+                                self.dateHastaLic.text(), self.txtMotivoLic.toPlainText(),
+                                self.license_states[self.cbVBCapitan.checkState().value])
+            licencia.licenciaUpdate()
             self.buscarLicencias()
             QtWidgets.QMessageBox.information(self, "Licencias", "Licencia actualizada con éxito")
         except Exception as e:
@@ -204,9 +255,10 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def saveLicencia(self):
         try:
-            self.database.nv_lic(self.inpCorrLic.text(), self.inpRegLic.text(), self.dateDesdeLic.text(),
-                                 self.dateHastaLic.text(), self.txtMotivoLic.toPlainText(),
-                                 self.LicenseStates[self.cbVBCapitan.checkState().value])
+            licencia = Licencia(self.inpCorrLic.text(), self.inpRegLic.text(), self.dateDesdeLic.text(),
+                                self.dateHastaLic.text(), self.txtMotivoLic.toPlainText(),
+                                self.license_states[self.cbVBCapitan.checkState().value])
+            licencia.nv_lic()
             QtWidgets.QMessageBox.information(self, "Licencias", "Licencia guardada con éxito")
             self.buscarLicencias()
         except Exception as e:
@@ -228,12 +280,13 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.inpCorrLic.setText(CorrLic)
             self.inpNomLic.setText(self.database.get_nameVols(nReg))
             self.inpRegLic.setText(nReg)
-            self.dateDesdeLic.setDate(fDesde)
-            self.dateHastaLic.setDate(fHasta)
+            self.dateDesdeLic.setDateTime(fDesde)
+            self.dateHastaLic.setDateTime(fHasta)
             self.txtMotivoLic.setText(motivo)
-            self.cbVBCapitan.setCheckState(self.CBLicenseStates[aprobado])
+            self.cbVBCapitan.setCheckState(self.cb_license_states[aprobado])
 
     def buscarLicencias(self):
+        self.database.connection.connect()
         self.clearTable(self.tblLicencias)
         # try:
         lics = self.database.get_ListLic(self.inpSrcLic.text())
@@ -250,103 +303,65 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def informePersonal(self):
         try:
-            informesPath = self.getSaveFile()
-            headerAsis = ['Año', 'Listas Totales', 'Asistencia Total', 'Listas Obligatorias', 'Asistencia Obligatorias']
-            headerActos = ["Correlativo Compañia", "Tipo de Acto", "Correlativo General",
-                           "Fecha",
-                           "Direccion", "Lista"]
-            vol = self.fldInfoPersonal.text()
-            vol = vol.split('-')
-            vol[0] = vol[0].strip()
-            asistencia, actos = self.database.getInformePersonal(vol[0])
-            dfAsis = pd.DataFrame(asistencia)
-            dfAct = pd.DataFrame(actos)
-            excelWriter = pd.ExcelWriter(informesPath)
-            dfAsis.to_excel(excelWriter, sheet_name='Asistencia', header=headerAsis, index=False)
-            dfAct.to_excel(excelWriter, sheet_name='Actos', header=headerActos, index=False)
-            excelWriter.close()
-            os.startfile(informesPath)
+            informe_personal = Informe(self)
+            informe_personal.informe_personal(self.fldInfoPersonal.text())
         except Exception as e:
             dialogo = QtWidgets.QMessageBox.warning(
                 self, "Error", f"Ha ocurrido un error.\n Código de error: {e}"
             )
             return
 
-    def arrastre(self):
-        try:
-            arrastrePath = self.getSaveFile()
-            arrastre = self.database.getArrastre(self.infoFechaDesde.text(), self.infoFechaHasta.text())
-            open(os.path.abspath('resources/template.html'), 'w').write(arrastre)
-            with open(os.path.abspath('resources/template.html')) as f:
-                pdfkit.from_file(f, arrastrePath, options={'page-size': 'Legal', 'encoding': 'UTF-8'})
-            os.startfile(arrastrePath)
-        except Exception as e:
-            dialogo = QtWidgets.QMessageBox.warning(
-                self, "Error", f"Ha ocurrido un error generando el arrastre.\n Código de error: {e}"
-            )
-            return
+    # TODO: Reformat or redesign this function
+    # def arrastre(self):
+    #     try:
+    #         arrastrePath = self.getSaveFile()
+    #         arrastre = self.database.getArrastre(self.infoFechaDesde.text(), self.infoFechaHasta.text())
+    #         open(os.path.abspath('resources/template.html'), 'w').write(arrastre)
+    #         with open(os.path.abspath('resources/template.html')) as f:
+    #             pdfkit.from_file(f, arrastrePath, options={'page-size': 'Legal', 'encoding': 'UTF-8'})
+    #         os.startfile(arrastrePath)
+    #     except Exception as e:
+    #         dialogo = QtWidgets.QMessageBox.warning(
+    #             self, "Error", f"Ha ocurrido un error generando el arrastre.\n Código de error: {e}"
+    #         )
+    #         return
 
+    # DONE
     def informe90dias(self):
-        header = ["Reg. Gral", "Nombre", "Apellido Paterno", "Apellido Materno"]
+
         try:
-            path = self.getSaveFile()
-            lista, actos = self.database.info90()
-            dfActos = pd.DataFrame(actos)
-            dfListas = pd.DataFrame(lista)
-            exelWriter = pd.ExcelWriter(path)
-            dfListas.to_excel(exelWriter, sheet_name="Voluntarios sin asistencia", header=header, index=False)
-            dfActos.to_excel(exelWriter, sheet_name="Actos", header=self.headeractos, index=False)
-            exelWriter.close()
-            os.startfile(path)
+            _90Dias = Informe(self)
+            _90Dias.info90()
         except Exception as e:
             dialogo = QtWidgets.QMessageBox.warning(
                 self, "Error", f"Ha ocurrido un error generando el informe.\n Código de error: {e}"
             )
             return
 
+    # DONE
     def resumenEspecifico(self):
         try:
-            path = self.getSaveFile()
-            lista, actos, estadistica = self.database.resEspecifico(self.infoFechaDesde.text(),
-                                                                    self.infoFechaHasta.text())
-            dfActos = pd.DataFrame(actos)
-            dfListas = pd.DataFrame(lista)
-            dfEstadistica = pd.DataFrame(estadistica)
-            exelWriter = pd.ExcelWriter(path)
-            dfListas.to_excel(exelWriter, sheet_name="Asistencia Voluntarios", header=self.header, index=False)
-            dfActos.to_excel(exelWriter, sheet_name="Actos", header=self.headeractos, index=False)
-            dfEstadistica.to_excel(exelWriter, sheet_name="Estadistica", header=False, index=False)
-            exelWriter.close()
-            os.startfile(path)
+            InformeEspecifico = Informe(self, DateStart=self.infoFechaDesde.text(), DateEnd=self.infoFechaHasta.text())
+
+            InformeEspecifico.resEspecifico()
         except Exception as e:
             dialogo = QtWidgets.QMessageBox.warning(
                 self, "Error", f"Ha ocurrido un error generando el informe.\n Código de error: {e}"
             )
             return
 
+    # DONE
     def resumenMensual(self):
         try:
-            informesPath = self.getSaveFile()
-            headerEstadistica = ['Incendios', 'Estructurales', 'Rescates', 'Salvamentos', 'Materiales Peligrosos',
-                                 'Llamados de Comandancia']
-            lista, actos, estadistica = self.database.resMensual(self.cbMesInforme.currentText(),
-                                                                 self.cbAnoInforme.currentText())
-            dfActos = pd.DataFrame(actos)
-            dfListas = pd.DataFrame(lista)
-            dfEstadistica = pd.DataFrame(estadistica)
-            exelWriter = pd.ExcelWriter(informesPath)
-            dfListas.to_excel(exelWriter, sheet_name="Asistencia Voluntarios", header=self.header, index=False)
-            dfActos.to_excel(exelWriter, sheet_name="Actos", header=self.headeractos, index=False)
-            dfEstadistica.to_excel(exelWriter, sheet_name="Estadistica", header=False, index=False)
-            exelWriter.close()
-            os.startfile(informesPath)
-
+            InformeMensual = Informe(self, month=self.cbMesInforme.currentText(), year=self.cbAnoInforme.currentText())
+            InformeMensual.resMensual()
         except Exception as e:
             dialogo = QtWidgets.QMessageBox.warning(
                 self, "Error", f"Ha ocurrido un error generando el informe.\n Código de error: {e}"
             )
             return
 
+    # DONE*
     def insert_vol(self):
         try:
             nVoluntario = Voluntario(self.fldRegGral.text(), self.fldRegCia.text(), self.fldNombre.text(),
@@ -362,7 +377,11 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def editar_vol(self):
         try:
-            self.bombero.editVol()
+            _EditedFirefighter = Voluntario(self.fldRegGral.text(), self.fldRegCia.text(), self.fldNombre.text(),
+                                            self.fldApellidoP.text(), self.fldApellidoM.text(), self.fldRut.text(),
+                                            self.fldeMail.text(), self.fldFechaIn.text(),
+                                            self.cbSubEstado.currentText())
+            _EditedFirefighter.editVol()
             self.buscar_bomberos()
             aviso = QtWidgets.QMessageBox.information(self, "Guardar", "Información actualizada exitosamente")
         except Exception as e:
@@ -377,7 +396,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             cCia = self.tblAdminVols.model().index(fila, 0).data()
             rGral, nombre, apellido1, apellido2, email, rut, dv, rCia, fIngreso, sub_estado = self.database.getVols(
                 cCia)
-            self.bombero = Voluntario(rGral, nombre, apellido1, apellido2, email, rut, dv, rCia, fIngreso, sub_estado)
             self.fldRegGral.setText(rGral)
             self.fldRegCia.setText(str(rCia))
             self.fldNombre.setText(nombre)
@@ -389,6 +407,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.cbSubEstado.setCurrentText(sub_estado)
 
     def buscar_bomberos(self):
+        self.database.connection.connect()
         self.clearTable(self.tblAdminVols)
         vols = self.database.srcVols(self.fldSrcAdminVols.text())
         for i in range(len(vols)):
@@ -399,15 +418,12 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def edit_list(self):
         try:
+            self.get_carros()
             cCia = self.liListsView.model().index(self.liListsView.currentRow(), 0).data()
-            lista = Acto(cCia, self.fldActoEdit.text(), self.inpCorrGenEdit.text(), self.inpFechaEdit.text(),
-                         self.inpDireccionEdit.text(), self.efectivaEstateIn[self.cbEfectivaEdit.checkState().value],
-                         len(self.lista), self.lista)
+            lista = Acto(cCia, self.cb_espAct.currentText(), self.inpCorrGenEdit.text(), self.inpFechaEdit.text(),
+                         self.inpDireccionEdit.text(), self.efectiva_estate_in[self.cbEfectivaEdit.checkState().value],
+                         len(self.lista), self.lista, self.unidades_asistentes)
             lista.editLista()
-            self.cbMesInforme.clear()
-            self.cbAnoInforme.clear()
-            self.cbMesInforme.addItems(self.database.getMonth())
-            self.cbAnoInforme.addItems(self.database.getYear())
             aviso = QtWidgets.QMessageBox.information(self, "Guardar", "Lista guardada exitosamente")
             self.buscar_listas()
         except Exception as e:
@@ -441,12 +457,14 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.lista.clear()
             fila = seleccion.indexes()[0].row()
             cCia = self.liListsView.model().index(fila, 0).data()
-            acto, cGral, fecha, direccion, lista = self.database.getActos(cCia)
+            acto, cGral, fecha, direccion, lista, carros = self.database.getActos(cCia)
             self.inpCorrGenEdit.setText(str(cGral))
-            self.fldActoEdit.setText(acto)
+            self.cb_catAct.setCurrentText(self.filter_Act(acto))
+            self.setSubClassList(self.cb_catAct, self.cb_espAct)
+            self.cb_espAct.setCurrentText(acto)
             self.inpDireccionEdit.setText(direccion)
             self.inpFechaEdit.setDate(fecha)
-            self.cbEfectivaEdit.setCheckState(self.cbEfectivaEditEstates[lista])
+            self.cbEfectivaEdit.setCheckState(self.cb_efectiva_edit_estates[lista])
             self.clearTable(self.liVolsEdit)
             vols = self.database.extVols(cCia)
             for i in range(len(vols)):
@@ -456,8 +474,10 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 self.liVolsEdit.setItem(i, 1, QtWidgets.QTableWidgetItem(f'{nombre} {apellido1} {apellido2}'))
                 self.lista.add(rGral)
             self.lbl_cVolsEdit.setText(str(len(self.lista)))
+            self.set_carros(str(carros))
 
     def buscar_listas(self):
+        self.database.connection.connect()
         self.clearTable(self.liListsView)
         listas = self.database.srcLista(self.inpSearchList.text())
         for i in range(len(listas)):
@@ -514,29 +534,32 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.lbl_cVolsEdit.setText(str(len(self.lista)))
             return
 
-    def clearTable(self, table):
+    @staticmethod
+    def clearTable(table):
         for i in range(table.rowCount(), -1, -1):
             table.removeRow(i)
 
     def clearFields(self):
         self.lista.clear()
-        self.inpActo.clear()
         self.inpDireccion.clear()
         self.inpCorrCia.clear()
         self.inpCorrGral.clear()
         self.clearTable(self.liVols)
         self.cbEfectiva.setCheckState(QtCore.Qt.CheckState.Unchecked)
         self.lblTotalLista.setText(str(len(self.lista)))
-        self.cbMesInforme.clear()
         self.cbAnoInforme.clear()
-        self.cbMesInforme.addItems(self.database.getMonth())
         self.cbAnoInforme.addItems(self.database.getYear())
+        self.unidades_asistentes.clear()
+        for value in self.ingreso_carros.values():
+            value.setCheckState(QtCore.Qt.CheckState.Unchecked)
 
     def save_list(self):
         try:
-            acto = Acto(self.inpCorrCia.text(), self.inpActo.text(), self.inpCorrGral.text(), self.inpFecha.text(),
-                        self.inpDireccion.text(), self.efectivaEstateIn[self.cbEfectiva.checkState().value],
-                        len(self.lista), self.lista)
+            self.get_carros()
+            acto = Acto(self.inpCorrCia.text(), self.cb_actC2.currentText(), self.inpCorrGral.text(),
+                        self.inpFecha.text(),
+                        self.inpDireccion.text(), self.efectiva_estate_in[self.cbEfectiva.checkState().value],
+                        len(self.lista), self.lista, self.unidades_asistentes)
             acto.addLista()
             aviso = QtWidgets.QMessageBox.information(self, "Guardar", "Lista guardada exitosamente")
             self.clearFields()
@@ -546,7 +569,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             )
             return
 
-    def show_help_manual(self):
+    @staticmethod
+    def show_help_manual():
         os.startfile(os.path.abspath("resources\\Instructivo Sistema de Estadistica.pdf"))
         return
 

@@ -2,6 +2,16 @@ from lib.Models.connection import Conexion
 import datetime
 
 class Voluntario(Conexion):
+    rGeneral : str
+    rCia : int
+    nombre : str
+    apellidoP: str
+    apellidoM : str
+    eMail : str
+    fIngreso : datetime.date
+    Sub_Estado : str
+    rut : int
+    dv : str
     def __init__(self, rGeneral, rCia, nombre, apellidoP, apellidoM, crut, eMail, fIngreso, Sub_Estado):
         super().__init__()
         self.rGeneral = rGeneral
@@ -16,12 +26,12 @@ class Voluntario(Conexion):
 
     @staticmethod
     def FilterRut(rut):
-        try:
+        if '-' in rut:
             rut = rut.split('-')
             dv = rut[1]
             rut = int(rut[0])
             return rut, dv
-        except Exception as e:
+        else:
             return 0, '0'
 
     def addVols(self):
@@ -31,7 +41,21 @@ class Voluntario(Conexion):
 
     def editVol(self):
         _values = (self.rGeneral, self.nombre, self.apellidoP, self.apellidoM, self.eMail, self.rut, self.dv, self.rCia, self.fIngreso, self.Sub_Estado, self.rGeneral)
-        _query = 'UPDATE bomberos SET reg_gral = %s,nombre = %s, apellidoP = %s, apellidoM = %s, email = %s, rut = %s, dv = %s, reg_cia = %s, f_ingreso = %s, sub_estado = %s WHERE reg_gral = %s'
+        _query = '''
+        UPDATE bomberos 
+        SET 
+            reg_gral = %s,
+            nombre = %s, 
+            apellidoP = %s, 
+            apellidoM = %s, 
+            email = %s, 
+            rut = %s, 
+            dv = %s, 
+            reg_cia = %s, 
+            f_ingreso = %s, 
+            sub_estado = %s 
+        WHERE 
+            reg_gral = %s'''
         self.cursor.execute(_query, _values)
         self.connection.commit()
 

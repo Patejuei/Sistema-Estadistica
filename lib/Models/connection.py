@@ -4,24 +4,20 @@ import os
 from dotenv import load_dotenv
 import datetime
 class Conexion:
+
     def __init__(self):
         load_dotenv()
-
-        db_data = {
-            'host' : os.getenv('DB_HOST'),
-            'port' : os.getenv('DB_PORT'),
-            'user' : os.getenv('DB_USER'),
-            'pass' : os.getenv('DB_PASSWORD'),
-            'database' : os.getenv('DB_NAME')
-        }
         self.connection = db.connect(
-            host = db_data['host'],
-            port = db_data['port'],
-            user = db_data['user'],
-            password = db_data['pass'],
-            database = db_data['database']
+            host = os.getenv('DB_HOST'),
+            port = os.getenv('DB_PORT'),
+            user = os.getenv('DB_USER'),
+            password = os.getenv('DB_PASSWORD'),
+            database = os.getenv('DB_NAME')
         )
         self.cursor = self.connection.cursor()
+
+
+
 
     @staticmethod
     def Filter_Date(date):
@@ -30,14 +26,29 @@ class Conexion:
         return date
 
     def srcVols(self, source):
+        
         self.cursor.execute(f"SELECT reg_gral, nombre, apellidoP, apellidoM FROM bomberos WHERE reg_gral LIKE '{source}%'")
-        busqueda = self.cursor.fetchall()
-        return busqueda
+        _search = self.cursor.fetchall()
+        
+        return _search
+
 
     def srcLista(self, srcLista):
-        self.cursor.execute(f'SELECT corr_cia, DATE_FORMAT(fecha, "%d-%m-%Y"), acto, direccion FROM actos WHERE corr_cia like "{srcLista}%" OR direccion LIKE "%{srcLista}%" ORDER BY fecha desc, corr_cia DESC')
-        busq = self.cursor.fetchall()
-        return busq
+        
+        self.cursor.execute(
+            f'''SELECT
+                    corr_cia, 
+                    DATE_FORMAT(fecha, '%d-%m-%Y'), 
+                    acto, 
+                    direccion 
+                FROM actos 
+                WHERE 
+                    corr_cia like '{srcLista}%' OR direccion LIKE '%{srcLista}%'
+                ORDER BY 
+                    fecha desc, 
+                    corr_cia DESC''')
+        _SrcResults = self.cursor.fetchall()
+        return _SrcResults
 
     def extVols(self, corrCia):
         self.cursor.execute(
@@ -47,34 +58,47 @@ class Conexion:
 
 
     def addVolLista(self, vol):
+        
         self.cursor.execute(f'SELECT reg_gral, nombre, apellidoP, apellidoM FROM bomberos WHERE reg_gral = "{vol}"')
         result = self.cursor.fetchall()[0]
+        
         return result
 
 
     def getYear(self):
-        años = [""]
+        
+        years = [""]
         self.cursor.execute("SELECT YEAR(fecha) FROM actos GROUP BY year(fecha) ORDER BY fecha")
         for ye in self.cursor.fetchall():
-            años.append(str(ye[0]))
-        return años
+            years.append(str(ye[0]))
+        
+        return years
 
     def getActos(self, cCia):
-        self.cursor.execute(f'SELECT acto, corr_gral, fecha, direccion, lista FROM actos WHERE corr_cia = "{cCia}"')
+        
+        self.cursor.execute(f'SELECT acto, corr_gral, fecha, direccion, lista, unidad FROM actos WHERE corr_cia = "{cCia}"')
         result = self.cursor.fetchall()[0]
+        
         return result
 
     def delLista(self, cCia):
+        
         self.cursor.execute(f'DELETE FROM asistencia WHERE corr_cia_acto = "{cCia}"')
         self.cursor.execute(f'DELETE FROM actos WHERE corr_cia = "{cCia}"')
         self.connection.commit()
+        self.connection.close()
+        
 
     def getVols(self, rGral):
+        
         self.cursor.execute(f'SELECT * FROM bomberos WHERE reg_gral = "{rGral}"')
         result = self.cursor.fetchall()[0]
+        
         return result
 
+    #TODO: Pasar a Informes
     def getArrastre(self, date_s, date_l):
+        
         arrastre = open(os.path.abspath('resources/styles.html'), 'r').read()
         self.cursor.execute(
             f'SELECT direccion, acto, DATE_FORMAT(fecha, "%d-%m-%Y"), corr_gral, corr_cia, lista FROM actos WHERE fecha BETWEEN STR_TO_DATE("{date_s}", "%d-%m-%Y") AND STR_TO_DATE("{date_l}", "%d-%m-%Y")')
@@ -93,10 +117,13 @@ class Conexion:
                 reg_gral, nombre, apellidoP, apellidoM = vol
                 content += f'<tr><td class="c1">{reg_gral}</td><td class="c2">{nombre} {apellidoP} {apellidoM}</td></tr>'
             arrastre += header + content + "</table><br>"
+            
         return arrastre
 
+    #TODO: pasar a informes
     def getInformePersonal(self, rGral):
         # Primera hoja : Asistencia x Año
+        
         asistencia = []
         self.cursor.execute("SELECT YEAR(fecha) from actos GROUP BY YEAR(fecha)")
         years = self.cursor.fetchall()
@@ -113,56 +140,56 @@ class Conexion:
         # Segunda Hoja : Actos
         self.cursor.execute(f"SELECT corr_cia, acto, corr_gral, fecha, direccion, lista FROM actos INNER JOIN asistencia a on actos.corr_cia = a.corr_cia_acto WHERE a.reg_gral_voluntario = '{rGral}' ORDER BY fecha DESC, corr_cia DESC")
         actos = self.cursor.fetchall()
+        
         return asistencia, actos
 
     def getVolsInfoPers(self):
+        
         vols = []
         self.cursor.execute("SELECT reg_gral, nombre, apellidoP, apellidoM FROM bomberos")
         for vol in self.cursor.fetchall():
             rGral, nombre, apellidoP, apellidoM = vol
             vols.append(f"{rGral} - {nombre} {apellidoP} {apellidoM}")
+
+        
         return vols
 
-    #Ingresar Nueva Licencia
-    def nv_lic(self, *args):
-        cLic, n_reg, f_desde, f_hasta, motivo, aprobado = args
-        query = f'INSERT INTO licencias VALUES ("{n_reg}", STR_TO_DATE("{f_desde}" , "%d-%m-%Y"), STR_TO_DATE("{f_hasta}", "%d-%m-%Y"), "{motivo}", "{aprobado}", "{cLic}")'
-        self.cursor.execute(query)
-        self.connection.commit()
-        return
+    #TODO: Crear Clase Licencias.py
+
 
     #Retornar Nombre para el campo
     def get_nameVols(self, nReg):
+        
         query = f"SELECT nombre, apellidoP, apellidoM FROM bomberos WHERE reg_gral = '{nReg}'"
         self.cursor.execute(query)
         nom, apeP, apeM = self.cursor.fetchone()
         nombre = f'{nom} {apeP} {apeM}'
+        
         return nombre
 
-    # Retornar Lista de Licencias
+    # Retornar Lista de Licencias.py
     def get_ListLic(self, inp):
+        
         query = f"SELECT corr_Lic, b.nombre, b.apellidoP, b.apellidoM, f_desde, f_hasta FROM licencias INNER JOIN bomberos b on nro_registro = b.reg_gral WHERE b.nombre LIKE '{inp}%' OR b.apellidoP LIKE '{inp}%' ORDER BY corr_Lic DESC"
         self.cursor.execute(query)
         licencias = self.cursor.fetchall()
+        
         return licencias
 
     # Retornar contenido de licencias
     def get_LicCont(self, CLic):
+        
         query = f"SELECT corr_Lic, nro_registro, f_desde, f_hasta, motivo, aprobado FROM licencias WHERE corr_Lic='{CLic}'"
         self.cursor.execute(query)
         licencia=self.cursor.fetchone()
+        
         return licencia
-    # Actualizar Licencia
-    def licenciaUpdate(self, *licencia):
-        cLic, n_reg, f_desde, f_hasta, motivo, aprobado = licencia
-        query = f'UPDATE licencias SET nro_registro = "{n_reg}", f_desde = STR_TO_DATE("{f_desde}" , "%d-%m-%Y"),f_hasta = STR_TO_DATE("{f_hasta}", "%d-%m-%Y"), motivo = "{motivo}", aprobado = "{aprobado}", corr_Lic = "{cLic}")'
-        self.cursor.execute(query)
-        self.connection.commit()
-        return
 
     # Eliminar Licencia
     def deleteLicencia(self, corr_Lic):
+        
         sql = f'DELETE FROM licencias WHERE corr_Lic = "{corr_Lic}"'
         self.cursor.execute(sql)
         self.connection.commit()
+        
 

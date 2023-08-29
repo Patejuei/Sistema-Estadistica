@@ -6,9 +6,21 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1037</width>
-    <height>641</height>
+    <width>1080</width>
+    <height>638</height>
    </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>1080</width>
+    <height>0</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>1080</width>
+    <height>16777215</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>Sistema de Estadistica - Bomba Tobalaba</string>
@@ -202,7 +214,7 @@ border: 0.5px solid lightgrey;
     <item>
      <widget class="QStackedWidget" name="contentField">
       <property name="currentIndex">
-       <number>4</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="pageInsert">
        <layout class="QVBoxLayout" name="verticalLayout_10">
@@ -216,7 +228,20 @@ border: 0.5px solid lightgrey;
            </widget>
           </item>
           <item>
-           <widget class="QLineEdit" name="inpCorrCia"/>
+           <widget class="QLineEdit" name="inpCorrCia">
+            <property name="minimumSize">
+             <size>
+              <width>80</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>80</width>
+              <height>16777215</height>
+             </size>
+            </property>
+           </widget>
           </item>
           <item>
            <widget class="QCheckBox" name="cbEfectiva">
@@ -233,21 +258,158 @@ border: 0.5px solid lightgrey;
            </widget>
           </item>
           <item>
-           <widget class="QLineEdit" name="inpCorrGral"/>
+           <widget class="QLineEdit" name="inpCorrGral">
+            <property name="minimumSize">
+             <size>
+              <width>80</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>80</width>
+              <height>16777215</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_41">
+            <property name="maximumSize">
+             <size>
+              <width>36</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Clave</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QComboBox" name="cb_actC1">
+            <property name="maximumSize">
+             <size>
+              <width>100</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <item>
+             <property name="text">
+              <string>Seleccione</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Compañía</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>CB</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>10-0</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>10-1</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>10-2</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>10-3</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>10-4</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>10-5</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>10-6</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>10-7</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>10-8</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>10-9</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>10-10</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>10-11</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>10-12</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>10-13</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>10-14</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>10-15</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>10-16</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>10-17</string>
+             </property>
+            </item>
+           </widget>
           </item>
           <item>
            <widget class="QLabel" name="label_5">
             <property name="text">
-             <string>Tipo de Acto</string>
+             <string>Sub-Clasificación</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QLineEdit" name="inpActo">
-            <property name="maxLength">
-             <number>15</number>
-            </property>
-           </widget>
+           <widget class="QComboBox" name="cb_actC2"/>
           </item>
          </layout>
         </item>
@@ -278,7 +440,33 @@ border: 0.5px solid lightgrey;
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_8">
           <item>
-           <widget class="QTableWidget" name="liVols"/>
+           <widget class="QTableWidget" name="liVols">
+            <property name="minimumSize">
+             <size>
+              <width>600</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="editTriggers">
+             <set>QAbstractItemView::NoEditTriggers</set>
+            </property>
+            <property name="selectionMode">
+             <enum>QAbstractItemView::SingleSelection</enum>
+            </property>
+            <property name="selectionBehavior">
+             <enum>QAbstractItemView::SelectRows</enum>
+            </property>
+            <column>
+             <property name="text">
+              <string>Registro General</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Nombre</string>
+             </property>
+            </column>
+           </widget>
           </item>
           <item>
            <layout class="QVBoxLayout" name="newListActions">
@@ -321,6 +509,40 @@ border: 0.5px solid lightgrey;
               <property name="text">
                <string>Eliminar</string>
               </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QGroupBox" name="groupBox_3">
+              <property name="title">
+               <string>Carros Asistentes</string>
+              </property>
+              <layout class="QVBoxLayout" name="verticalLayout_9">
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_9">
+                 <item>
+                  <widget class="QCheckBox" name="cbInsertB9">
+                   <property name="text">
+                    <string>B-9</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="cbInsertUT9">
+                   <property name="text">
+                    <string>UT-9</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="cbInsertM9">
+                   <property name="text">
+                    <string>M-9</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+              </layout>
              </widget>
             </item>
             <item>
@@ -375,7 +597,40 @@ border: 0.5px solid lightgrey;
             <widget class="QLineEdit" name="inpSearchList"/>
            </item>
            <item>
-            <widget class="QTableWidget" name="liListsView"/>
+            <widget class="QTableWidget" name="liListsView">
+             <property name="editTriggers">
+              <set>QAbstractItemView::NoEditTriggers</set>
+             </property>
+             <property name="selectionMode">
+              <enum>QAbstractItemView::SingleSelection</enum>
+             </property>
+             <property name="selectionBehavior">
+              <enum>QAbstractItemView::SelectRows</enum>
+             </property>
+             <attribute name="horizontalHeaderCascadingSectionResizes">
+              <bool>false</bool>
+             </attribute>
+             <column>
+              <property name="text">
+               <string>Correlativo de Compañía</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>Fecha</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>Acto</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>Dirección</string>
+              </property>
+             </column>
+            </widget>
            </item>
           </layout>
          </widget>
@@ -384,6 +639,12 @@ border: 0.5px solid lightgrey;
          <widget class="QWidget" name="editLl" native="true">
           <property name="enabled">
            <bool>true</bool>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>368</width>
+            <height>16777215</height>
+           </size>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_5">
            <item>
@@ -399,7 +660,20 @@ border: 0.5px solid lightgrey;
                  </widget>
                 </item>
                 <item>
-                 <widget class="QLineEdit" name="inpCorrGenEdit"/>
+                 <widget class="QLineEdit" name="inpCorrGenEdit">
+                  <property name="minimumSize">
+                   <size>
+                    <width>80</width>
+                    <height>0</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>80</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                 </widget>
                 </item>
                 <item>
                  <widget class="QCheckBox" name="cbEfectivaEdit">
@@ -411,30 +685,29 @@ border: 0.5px solid lightgrey;
                </layout>
               </item>
               <item>
-               <layout class="QHBoxLayout" name="horizontalLayout_4">
-                <item>
-                 <widget class="QLabel" name="label_8">
-                  <property name="text">
-                   <string>Tipo de Acto</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QLineEdit" name="fldActoEdit">
-                  <property name="maxLength">
-                   <number>15</number>
-                  </property>
-                 </widget>
-                </item>
+               <layout class="QHBoxLayout" name="horizontalLayout_11">
                 <item>
                  <widget class="QLabel" name="label_11">
+                  <property name="maximumSize">
+                   <size>
+                    <width>48</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
                   <property name="text">
                    <string>Fecha</string>
                   </property>
                  </widget>
                 </item>
                 <item>
-                 <widget class="QDateEdit" name="inpFechaEdit"/>
+                 <widget class="QDateEdit" name="inpFechaEdit">
+                  <property name="maximumSize">
+                   <size>
+                    <width>84</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                 </widget>
                 </item>
                </layout>
               </item>
@@ -452,6 +725,173 @@ border: 0.5px solid lightgrey;
                 </item>
                </layout>
               </item>
+              <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_15">
+                <item>
+                 <widget class="QLabel" name="label_40">
+                  <property name="maximumSize">
+                   <size>
+                    <width>36</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string>Clave</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QComboBox" name="cb_catAct">
+                  <property name="minimumSize">
+                   <size>
+                    <width>93</width>
+                    <height>0</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>93</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <item>
+                   <property name="text">
+                    <string>-</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>Compañía</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>CB</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>10-0</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>10-1</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>10-2</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>10-3</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>10-4</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>10-5</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>10-6</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>10-7</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>10-8</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>10-9</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>10-10</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>10-11</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>10-12</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>10-13</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>10-14</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>10-15</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>10-16</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>10-17</string>
+                   </property>
+                  </item>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="label_8">
+                  <property name="maximumSize">
+                   <size>
+                    <width>93</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string>Sub-Clasificación</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QComboBox" name="cb_espAct">
+                  <property name="minimumSize">
+                   <size>
+                    <width>93</width>
+                    <height>0</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>93</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
              </layout>
             </widget>
            </item>
@@ -459,18 +899,22 @@ border: 0.5px solid lightgrey;
             <widget class="QWidget" name="volsEdit" native="true">
              <layout class="QVBoxLayout" name="verticalLayout_7">
               <item>
-               <widget class="QLabel" name="label_31">
-                <property name="text">
-                 <string>Total de Voluntarios:</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QLabel" name="lbl_cVolsEdit">
-                <property name="text">
-                 <string>0</string>
-                </property>
-               </widget>
+               <layout class="QHBoxLayout" name="horizontalLayout_13">
+                <item>
+                 <widget class="QLabel" name="label_31">
+                  <property name="text">
+                   <string>Total de Voluntarios:</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="lbl_cVolsEdit">
+                  <property name="text">
+                   <string>0</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
               </item>
               <item>
                <widget class="QLabel" name="label_12">
@@ -480,57 +924,148 @@ border: 0.5px solid lightgrey;
                </widget>
               </item>
               <item>
-               <widget class="QLineEdit" name="inpAddVolEdit"/>
+               <layout class="QHBoxLayout" name="horizontalLayout_12">
+                <item>
+                 <widget class="QLineEdit" name="inpAddVolEdit"/>
+                </item>
+                <item>
+                 <widget class="QPushButton" name="btnAddVol_2">
+                  <property name="text">
+                   <string>Añadir</string>
+                  </property>
+                  <property name="icon">
+                   <iconset resource="Recursos.qrc">
+                    <normaloff>:/Icons/Icons/plus.svg</normaloff>:/Icons/Icons/plus.svg</iconset>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QPushButton" name="btnDelVol_2">
+                  <property name="text">
+                   <string>Eliminar</string>
+                  </property>
+                  <property name="icon">
+                   <iconset resource="Recursos.qrc">
+                    <normaloff>:/Icons/Icons/minus.svg</normaloff>:/Icons/Icons/minus.svg</iconset>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
               </item>
               <item>
-               <widget class="QPushButton" name="btnAddVol_2">
-                <property name="text">
-                 <string>Añadir</string>
+               <widget class="QTableWidget" name="liVolsEdit">
+                <property name="editTriggers">
+                 <set>QAbstractItemView::NoEditTriggers</set>
                 </property>
-                <property name="icon">
-                 <iconset resource="Recursos.qrc">
-                  <normaloff>:/Icons/Icons/plus.svg</normaloff>:/Icons/Icons/plus.svg</iconset>
+                <property name="selectionMode">
+                 <enum>QAbstractItemView::SingleSelection</enum>
                 </property>
+                <property name="selectionBehavior">
+                 <enum>QAbstractItemView::SelectRows</enum>
+                </property>
+                <column>
+                 <property name="text">
+                  <string>Registro General</string>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>Nombre</string>
+                 </property>
+                </column>
                </widget>
               </item>
               <item>
-               <widget class="QPushButton" name="btnDelVol_2">
-                <property name="text">
-                 <string>Eliminar</string>
+               <widget class="QGroupBox" name="groupBox_4">
+                <property name="maximumSize">
+                 <size>
+                  <width>168</width>
+                  <height>16777215</height>
+                 </size>
                 </property>
-                <property name="icon">
-                 <iconset resource="Recursos.qrc">
-                  <normaloff>:/Icons/Icons/minus.svg</normaloff>:/Icons/Icons/minus.svg</iconset>
+                <property name="title">
+                 <string>Carros Asistentes</string>
                 </property>
+                <property name="alignment">
+                 <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                </property>
+                <layout class="QHBoxLayout" name="horizontalLayout_10">
+                 <item>
+                  <widget class="QCheckBox" name="cbEditB9">
+                   <property name="text">
+                    <string>B-9</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="cbEditUT9">
+                   <property name="text">
+                    <string>UT-9</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="cbEditM9">
+                   <property name="text">
+                    <string>M-9</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
                </widget>
-              </item>
-              <item>
-               <widget class="QTableWidget" name="liVolsEdit"/>
               </item>
              </layout>
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="btnSaveEdit">
-             <property name="text">
-              <string>Guardar Lista</string>
-             </property>
-             <property name="icon">
-              <iconset resource="Recursos.qrc">
-               <normaloff>:/Icons/Icons/save.svg</normaloff>:/Icons/Icons/save.svg</iconset>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="btnDeleteEdit">
-             <property name="text">
-              <string>Eliminar Lista</string>
-             </property>
-             <property name="icon">
-              <iconset resource="Recursos.qrc">
-               <normaloff>:/Icons/Icons/trash-2.svg</normaloff>:/Icons/Icons/trash-2.svg</iconset>
-             </property>
-            </widget>
+            <layout class="QHBoxLayout" name="horizontalLayout_14">
+             <item>
+              <widget class="QPushButton" name="btnSaveEdit">
+               <property name="minimumSize">
+                <size>
+                 <width>192</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>192</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>Guardar Lista</string>
+               </property>
+               <property name="icon">
+                <iconset resource="Recursos.qrc">
+                 <normaloff>:/Icons/Icons/save.svg</normaloff>:/Icons/Icons/save.svg</iconset>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="btnDeleteEdit">
+               <property name="minimumSize">
+                <size>
+                 <width>96</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>96</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>Eliminar Lista</string>
+               </property>
+               <property name="icon">
+                <iconset resource="Recursos.qrc">
+                 <normaloff>:/Icons/Icons/trash-2.svg</normaloff>:/Icons/Icons/trash-2.svg</iconset>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </item>
           </layout>
          </widget>
@@ -540,183 +1075,320 @@ border: 0.5px solid lightgrey;
       <widget class="QWidget" name="pageInform">
        <layout class="QVBoxLayout" name="verticalLayout_12">
         <item>
-         <spacer name="verticalSpacer_4">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
+         <widget class="QGroupBox" name="groupBox">
+          <property name="title">
+           <string>Resumen Mensual</string>
           </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>17</width>
-            <height>178</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_13">
-          <property name="sizeConstraint">
-           <enum>QLayout::SetMaximumSize</enum>
-          </property>
-          <item>
-           <widget class="QWidget" name="secMensual" native="true">
-            <layout class="QVBoxLayout" name="verticalLayout_9">
-             <item>
-              <widget class="QLabel" name="label_18">
+          <widget class="QGroupBox" name="groupBox_2">
+           <property name="geometry">
+            <rect>
+             <x>10</x>
+             <y>20</y>
+             <width>351</width>
+             <height>60</height>
+            </rect>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="title">
+            <string>Preferencias</string>
+           </property>
+           <layout class="QHBoxLayout" name="horizontalLayout_4">
+            <item>
+             <widget class="QLabel" name="label_15">
+              <property name="text">
+               <string>Mes</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QComboBox" name="cbMesInforme">
+              <item>
                <property name="text">
-                <string>Resumen Mensual</string>
+                <string>Enero</string>
                </property>
-              </widget>
-             </item>
-             <item>
-              <layout class="QHBoxLayout" name="horizontalLayout_9">
-               <item>
-                <widget class="QLabel" name="label_14">
-                 <property name="text">
-                  <string>Mes</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QComboBox" name="cbMesInforme"/>
-               </item>
-               <item>
-                <widget class="QLabel" name="label_15">
-                 <property name="text">
-                  <string>Año</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QComboBox" name="cbAnoInforme"/>
-               </item>
-              </layout>
-             </item>
-             <item>
-              <layout class="QHBoxLayout" name="horizontalLayout_10">
-               <item>
-                <widget class="QPushButton" name="btnResMen">
-                 <property name="text">
-                  <string>Generar Resumen</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QPushButton" name="btnSendResMen">
-                 <property name="text">
-                  <string>Enviar Resumen</string>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </item>
-            </layout>
-           </widget>
-          </item>
-          <item>
-           <widget class="QWidget" name="secPersonalizado" native="true">
-            <layout class="QVBoxLayout" name="verticalLayout_11">
-             <item>
-              <widget class="QLabel" name="label_19">
+              </item>
+              <item>
                <property name="text">
-                <string>Resumen Específico</string>
+                <string>Febrero</string>
                </property>
-              </widget>
-             </item>
-             <item>
-              <layout class="QHBoxLayout" name="horizontalLayout_11">
-               <item>
-                <widget class="QLabel" name="label_16">
-                 <property name="text">
-                  <string>Fecha Desde</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QDateEdit" name="infoFechaDesde"/>
-               </item>
-               <item>
-                <widget class="QLabel" name="label_17">
-                 <property name="text">
-                  <string>Fecha Hasta</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QDateEdit" name="infoFechaHasta"/>
-               </item>
-              </layout>
-             </item>
-             <item>
-              <layout class="QHBoxLayout" name="horizontalLayout_12">
-               <item>
-                <widget class="QPushButton" name="btnGenResEsp">
-                 <property name="text">
-                  <string>Generar Resumen</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QPushButton" name="btnGenArr">
-                 <property name="text">
-                  <string>Generar Arrastre</string>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </item>
-            </layout>
+              </item>
+              <item>
+               <property name="text">
+                <string>Marzo</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Abril</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Mayo</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Junio</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Julio</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Agosto</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Septiembre</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Octubre</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Noviembre</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Diciembre</string>
+               </property>
+              </item>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_16">
+              <property name="text">
+               <string>Año</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QComboBox" name="cbAnoInforme"/>
+            </item>
+            <item>
+             <widget class="QPushButton" name="btnResMen">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>96</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>96</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>Extraer Informe</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QGroupBox" name="groupBox_5">
+           <property name="geometry">
+            <rect>
+             <x>10</x>
+             <y>90</y>
+             <width>591</width>
+             <height>141</height>
+            </rect>
+           </property>
+           <property name="title">
+            <string>Informes Personalizados</string>
+           </property>
+           <widget class="QGroupBox" name="groupBox_6">
+            <property name="geometry">
+             <rect>
+              <x>10</x>
+              <y>20</y>
+              <width>431</width>
+              <height>51</height>
+             </rect>
+            </property>
+            <property name="title">
+             <string>Periodo Especifico</string>
+            </property>
+            <widget class="QLabel" name="label_14">
+             <property name="geometry">
+              <rect>
+               <x>20</x>
+               <y>20</y>
+               <width>71</width>
+               <height>16</height>
+              </rect>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>71</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>71</width>
+               <height>16777215</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>Fecha Desde</string>
+             </property>
+            </widget>
+            <widget class="QDateEdit" name="infoFechaDesde">
+             <property name="geometry">
+              <rect>
+               <x>90</x>
+               <y>20</y>
+               <width>81</width>
+               <height>22</height>
+              </rect>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>81</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>81</width>
+               <height>16777215</height>
+              </size>
+             </property>
+            </widget>
+            <widget class="QLabel" name="label_17">
+             <property name="geometry">
+              <rect>
+               <x>180</x>
+               <y>20</y>
+               <width>71</width>
+               <height>16</height>
+              </rect>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>71</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>71</width>
+               <height>16777215</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>Fecha Hasta</string>
+             </property>
+            </widget>
+            <widget class="QDateEdit" name="infoFechaHasta">
+             <property name="geometry">
+              <rect>
+               <x>250</x>
+               <y>20</y>
+               <width>81</width>
+               <height>22</height>
+              </rect>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>81</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>81</width>
+               <height>16777215</height>
+              </size>
+             </property>
+            </widget>
+            <widget class="QPushButton" name="btnGenResEsp">
+             <property name="geometry">
+              <rect>
+               <x>340</x>
+               <y>20</y>
+               <width>75</width>
+               <height>24</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>Generar</string>
+             </property>
+            </widget>
            </widget>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <widget class="QWidget" name="secDetallePers" native="true">
-          <layout class="QHBoxLayout" name="horizontalLayout_14">
-           <item>
-            <widget class="QLabel" name="label_30">
-             <property name="text">
-              <string>Generar Informe por Personal:</string>
+           <widget class="QPushButton" name="btnInfo90Dias">
+            <property name="geometry">
+             <rect>
+              <x>450</x>
+              <y>40</y>
+              <width>111</width>
+              <height>24</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string>Informe de 90 Días</string>
+            </property>
+           </widget>
+           <widget class="QGroupBox" name="groupBox_7">
+            <property name="geometry">
+             <rect>
+              <x>10</x>
+              <y>80</y>
+              <width>561</width>
+              <height>51</height>
+             </rect>
+            </property>
+            <property name="title">
+             <string>Por Voluntario</string>
+            </property>
+            <widget class="QLineEdit" name="fldInfoPersonal">
+             <property name="geometry">
+              <rect>
+               <x>10</x>
+               <y>20</y>
+               <width>461</width>
+               <height>21</height>
+              </rect>
              </property>
             </widget>
-           </item>
-           <item>
-            <widget class="QLineEdit" name="fldInfoPersonal"/>
-           </item>
-           <item>
-            <widget class="QPushButton" name="btnGenInfoP">
+            <widget class="QPushButton" name="btnGetInfoP">
+             <property name="geometry">
+              <rect>
+               <x>480</x>
+               <y>20</y>
+               <width>75</width>
+               <height>24</height>
+              </rect>
+             </property>
              <property name="text">
-              <string>Generar Detalle</string>
+              <string>Generar</string>
              </property>
             </widget>
-           </item>
-          </layout>
+           </widget>
+          </widget>
          </widget>
-        </item>
-        <item>
-         <widget class="QWidget" name="secOInformes" native="true">
-          <layout class="QHBoxLayout" name="horizontalLayout_15">
-           <item>
-            <widget class="QPushButton" name="btnInfo90Dias">
-             <property name="text">
-              <string>Informe 90 Dias</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-        </item>
-        <item>
-         <spacer name="verticalSpacer_2">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>17</width>
-            <height>178</height>
-           </size>
-          </property>
-         </spacer>
         </item>
        </layout>
       </widget>
@@ -740,13 +1412,39 @@ border: 0.5px solid lightgrey;
             </layout>
            </item>
            <item>
-            <widget class="QTableWidget" name="tblAdminVols"/>
+            <widget class="QTableWidget" name="tblAdminVols">
+             <property name="editTriggers">
+              <set>QAbstractItemView::NoEditTriggers</set>
+             </property>
+             <property name="selectionMode">
+              <enum>QAbstractItemView::SingleSelection</enum>
+             </property>
+             <property name="selectionBehavior">
+              <enum>QAbstractItemView::SelectRows</enum>
+             </property>
+             <column>
+              <property name="text">
+               <string>N° Registro</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>Nombre</string>
+              </property>
+             </column>
+            </widget>
            </item>
           </layout>
          </widget>
         </item>
         <item>
          <widget class="QWidget" name="widget_2" native="true">
+          <property name="maximumSize">
+           <size>
+            <width>300</width>
+            <height>16777215</height>
+           </size>
+          </property>
           <layout class="QVBoxLayout" name="verticalLayout_14">
            <item>
             <widget class="QLabel" name="label_20">
@@ -836,7 +1534,33 @@ border: 0.5px solid lightgrey;
             </widget>
            </item>
            <item>
-            <widget class="QComboBox" name="cbSubEstado"/>
+            <widget class="QComboBox" name="cbSubEstado">
+             <item>
+              <property name="text">
+               <string>ACTIVO</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>SUSPENDIDO</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>RENUNCIADO</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>SEPARADO</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>EXPULSADO</string>
+              </property>
+             </item>
+            </widget>
            </item>
            <item>
             <widget class="QPushButton" name="btnEditVol">
@@ -849,6 +1573,13 @@ border: 0.5px solid lightgrey;
             <widget class="QPushButton" name="btnAddVol_3">
              <property name="text">
               <string>Agregar</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="btn_clflds">
+             <property name="text">
+              <string>Limpiar Campos</string>
              </property>
             </widget>
            </item>
@@ -872,7 +1603,43 @@ border: 0.5px solid lightgrey;
            <widget class="QLineEdit" name="inpSrcLic"/>
           </item>
           <item>
-           <widget class="QTableWidget" name="tblLicencias"/>
+           <widget class="QTableWidget" name="tblLicencias">
+            <property name="minimumSize">
+             <size>
+              <width>568</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="editTriggers">
+             <set>QAbstractItemView::NoEditTriggers</set>
+            </property>
+            <property name="selectionMode">
+             <enum>QAbstractItemView::SingleSelection</enum>
+            </property>
+            <property name="selectionBehavior">
+             <enum>QAbstractItemView::SelectRows</enum>
+            </property>
+            <column>
+             <property name="text">
+              <string>Correlativo</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Nombre</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Fecha Desde</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Fecha Hasta</string>
+             </property>
+            </column>
+           </widget>
           </item>
          </layout>
         </item>
@@ -930,7 +1697,7 @@ border: 0.5px solid lightgrey;
            </widget>
           </item>
           <item>
-           <widget class="QDateEdit" name="dateDesdeLic"/>
+           <widget class="QDateTimeEdit" name="dateDesdeLic"/>
           </item>
           <item>
            <widget class="QLabel" name="label_35">
@@ -940,7 +1707,7 @@ border: 0.5px solid lightgrey;
            </widget>
           </item>
           <item>
-           <widget class="QDateEdit" name="dateHastaLic"/>
+           <widget class="QDateTimeEdit" name="dateHastaLic"/>
           </item>
           <item>
            <widget class="QLabel" name="label_36">
@@ -992,9 +1759,9 @@ li.checked::marker { content: &quot;\2612&quot;; }
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="btnNullLic">
+           <widget class="QPushButton" name="btnClLic">
             <property name="text">
-             <string>Anular</string>
+             <string>Limpiar Campos</string>
             </property>
            </widget>
           </item>
