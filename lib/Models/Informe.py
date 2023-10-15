@@ -114,40 +114,88 @@ class Informe(Conexion):
         actos = self.cursor.fetchall()
 
         # Define the queries and their labels in a dictionary
-        queries = {
-            'Incendios Estructurales': "SELECT count(corr_cia) FROM actos WHERE MONTHNAME(fecha) = %s AND YEAR(fecha) = %s AND acto = 'INCENDIO'",
-            'Incendios Forestales': "SELECT count(corr_cia) FROM actos WHERE MONTHNAME(fecha) = %s AND YEAR(fecha) = %s AND acto = 'I. FOREST.'",
-            'Llamados de Comandancia': "SELECT count(corr_cia) FROM actos WHERE MONTHNAME(fecha) = %s AND YEAR(fecha) = %s AND acto LIKE '10-%' AND acto NOT LIKE '10-9-%' AND NOT acto = '10-3-9'",
-            'Claves 10-0': "SELECT count(corr_cia) FROM actos WHERE MONTHNAME(fecha) = %s AND YEAR(fecha) = %s AND acto LIKE '10-0-%'",
-            'Rescates': "SELECT count(corr_cia) FROM actos WHERE MONTHNAME(fecha) = %s AND YEAR(fecha) = %s AND acto LIKE '10-4-%'",
-            'Salvamentos': "SELECT count(corr_cia) FROM actos WHERE MONTHNAME(fecha) = %s AND YEAR(fecha) = %s AND acto LIKE '10-3-%' AND NOT acto = '10-3-9'",
-            'Materiales Peligrosos (10-5, 10-6)': "SELECT count(corr_cia) FROM actos WHERE MONTHNAME(fecha) = %s AND YEAR(fecha) = %s AND (acto LIKE '10-5-%' OR acto LIKE '10-6-%')",
-            'Apoyos a Otros Cuerpos (10-12, 0-11)': "SELECT count(corr_cia) FROM actos WHERE MONTHNAME(fecha) = %s AND YEAR(fecha) = %s AND acto = '10-12'",
-            'Otros Servicios': "SELECT count(corr_cia) FROM actos WHERE MONTHNAME(fecha) = %s AND YEAR(fecha) = %s AND (acto LIKE '10-9-%' OR acto = '10-3-9')",
-            'Sesiones': "SELECT count(corr_cia) FROM actos WHERE MONTHNAME(fecha) = %s AND YEAR(fecha) = %s AND (acto = 'SS.OO.' OR acto = 'SS.EE')",
-            'Academias': "SELECT count(corr_cia) FROM actos WHERE MONTHNAME(fecha) = %s AND YEAR(fecha) = %s AND acto = 'ACADEMIA'",
-            'Total de Servicios': "SELECT count(corr_cia) FROM actos WHERE MONTHNAME(fecha) = %s AND YEAR(fecha) = %s AND (acto LIKE '10-%' OR acto IN ('INCENDIO', 'I. FOREST.'))",
-            'Total de Listas': "SELECT count(corr_cia) FROM actos WHERE MONTHNAME(fecha) = %s AND YEAR(fecha) = %s",
-            'Promedio Asistencia Despachos': "SELECT avg(c_vols) FROM actos WHERE MONTHNAME(fecha) = %s AND YEAR(fecha) = %s AND (acto LIKE '10-%' OR acto = 'INCENDIO' or acto = 'I. FOREST.')",
-            'Promedio Asistencia Academias': "SELECT avg(c_vols) FROM actos WHERE MONTHNAME(fecha) = %s AND YEAR(fecha) = %s AND acto = 'ACADEMIA'",
-            'Promedio Asistencia Sesiones': "SELECT avg(c_vols) FROM actos WHERE MONTHNAME(fecha) = %s AND YEAR(fecha) = %s AND (acto = 'SS.OO.' OR acto = 'SS.EE')",
-            'Promedio Asistencia Citaciones CBPA': "SELECT avg(c_vols) FROM actos WHERE MONTHNAME(fecha) = %s AND YEAR(fecha) = %s AND (acto = 'DESFILE CB' OR acto = 'ROMERIA CB' or acto = 'SS. EE. CB')",
-            'Promedio Asistencia General': "SELECT avg(c_vols) FROM actos WHERE MONTHNAME(fecha) = %s AND YEAR(fecha) = %s AND NOT (acto in ('C. ADM.','J. OFF', 'CONS. DISC'))",
-        }
-
-        # Create a dictionary to store the results
-        _Statistics = {}
-
-        # Execute the queries and update the _Statistics dictionary
-        for label, query in queries.items():
-            self.cursor.execute(query, _DateDefiner)
-            _Statistics[label] = self.cursor.fetchone()[0]
+        _Query = f'''
+            SELECT
+                MONTH(fecha),
+                count(CASE WHEN acto = 'INCENDIO' THEN corr_cia END),
+                count(CASE WHEN acto = 'I. FOREST.' THEN corr_cia END),
+                count(CASE WHEN acto LIKE '10-%' AND acto NOT LIKE '10-9-%' AND NOT acto = '10-3-9' THEN corr_cia END),
+                count(CASE WHEN acto LIKE '10-0-%' THEN corr_cia END),
+                count(CASE WHEN acto LIKE '10-4-%' THEN corr_cia END),
+                count(CASE WHEN acto LIKE '10-3-%' AND NOT acto = '10-3-9' THEN corr_cia END),
+                count(CASE WHEN acto LIKE '10-5-%' OR acto LIKE '10-6-%' THEN corr_cia END),
+                count(CASE WHEN acto = '10-12' THEN corr_cia END),
+                count(CASE WHEN acto LIKE '10-9-%' OR acto = '10-3-9' THEN corr_cia END),
+                count(CASE WHEN acto = 'SS.OO.' OR acto = 'SS.EE' THEN corr_cia END),
+                count(CASE WHEN acto = 'ACADEMIA' THEN corr_cia END),
+                count(CASE WHEN acto LIKE '10-%' OR acto IN ('INCENDIO' , 'I. FOREST.') THEN corr_cia END),
+                count(corr_cia),
+                avg(CASE WHEN acto LIKE '10-%' OR acto IN ('INCENDIO' , 'I. FOREST.') THEN c_vols END),
+                avg(CASE WHEN acto = 'SS.OO.' OR acto = 'SS.EE' THEN c_vols END),
+                avg(CASE WHEN acto = 'ACADEMIA' THEN c_vols END),
+                avg(CASE WHEN acto IN ('DESFILE CB', 'ROMERIA CB', 'SS. EE. CB') THEN c_vols END),
+                avg(c_vols),
+                count(CASE WHEN unidad LIKE '%B9%' THEN corr_cia END),
+                count(CASE WHEN unidad LIKE '%M9%' THEN corr_cia END),
+                count(CASE WHEN unidad LIKE '%UT9%' THEN corr_cia END)
+            FROM actos
+            WHERE
+                YEAR(fecha) = {self.year}
+            GROUP BY MONTH(fecha)
+            ORDER BY MONTH(fecha)
+        '''
+        self.cursor.execute(_Query)
+        _Statistics = {'Mes': [],
+                       'Incendios Estructurales': [],
+                       'Incendios Forestales': [],
+                       'Llamados de Comandancia':[],
+                       'Claves 10-0':[],
+                       'Rescates':[],
+                       'Salvamentos':[],
+                       'Materiales Peligrosos (10-5, 10-6)':[],
+                       'Apoyos a otros cuerpos (10-12, 0-11)':[],
+                       'Otros Servicios':[],
+                       'Sesiones': [],
+                       'Academias': [],
+                       'Total Servicios': [],
+                       'Total Listas': [],
+                       'Promedio Asistencia Despachos': [],
+                       'Promedio Asistencia Sesiones': [],
+                       'Promedio Asistencia Academias': [],
+                       'Promedio Asistencia Citaciones CBPA': [],
+                       'Promedio Asistencia General': [],
+                       'Salidas B9' : [],
+                       'Salidas M9' : [],
+                       'Salidas UT9' : []}
+        for row in self.cursor.fetchall():
+            _Statistics['Mes'].append(row[0])
+            _Statistics['Incendios Estructurales'].append(row[1])
+            _Statistics['Incendios Forestales'].append(row[2])
+            _Statistics['Llamados de Comandancia'].append(row[3])
+            _Statistics['Claves 10-0'].append(row[4])
+            _Statistics['Rescates'].append(row[5])
+            _Statistics['Salvamentos'].append(row[6])
+            _Statistics['Materiales Peligrosos (10-5, 10-6)'].append(row[7])
+            _Statistics['Apoyos a otros cuerpos (10-12, 0-11)'].append(row[8])
+            _Statistics['Otros Servicios'].append(row[9])
+            _Statistics['Sesiones'].append(row[10])
+            _Statistics['Academias'].append(row[11])
+            _Statistics['Total Servicios'].append(row[12])
+            _Statistics['Total Listas'].append(row[13])
+            _Statistics['Promedio Asistencia Despachos'].append(row[14])
+            _Statistics['Promedio Asistencia Sesiones'].append(row[15])
+            _Statistics['Promedio Asistencia Academias'].append(row[16])
+            _Statistics['Promedio Asistencia Citaciones CBPA'].append(row[17])
+            _Statistics['Promedio Asistencia General'].append(row[18])
+            _Statistics['Salidas B9'].append(row[19])
+            _Statistics['Salidas M9'].append(row[20])
+            _Statistics['Salidas UT9'].append(row[21])
 
         self.connection.close()
 
         dfActs = pd.DataFrame(actos)
         dfAsist = pd.DataFrame(lista)
-        dfStatistics = pd.DataFrame(_Statistics, index=[self.month])
+        dfStatistics = pd.DataFrame(_Statistics)
 
         dfActs.to_excel(self.excelWriter, sheet_name="Actos del Mes", header=self._HeaderActos, index=False)
         dfAsist.to_excel(self.excelWriter, sheet_name="Asistencia Voluntarios", header=self._HeaderVols, index=False)
@@ -231,9 +279,9 @@ class Informe(Conexion):
                 count(CASE WHEN acto LIKE '10-9-%' OR acto = '10-3-9' THEN corr_cia END),
                 count(CASE WHEN acto = 'SS.OO.' OR acto = 'SS.EE' THEN corr_cia END),
                 count(CASE WHEN acto = 'ACADEMIA' THEN corr_cia END),
-                count(CASE WHEN acto LIKE '10-%' OR acto IN ('INCENDIO' , 'I. FORREST.') THEN corr_cia END),
+                count(CASE WHEN acto LIKE '10-%' OR acto IN ('INCENDIO' , 'I. FOREST.') THEN corr_cia END),
                 count(corr_cia),
-                avg(CASE WHEN acto LIKE '10-%' OR acto IN ('INCENDIO' , 'I. FORREST.') THEN c_vols END),
+                avg(CASE WHEN acto LIKE '10-%' OR acto IN ('INCENDIO' , 'I. FOREST.') THEN c_vols END),
                 avg(CASE WHEN acto = 'SS.OO.' OR acto = 'SS.EE' THEN c_vols END),
                 avg(CASE WHEN acto = 'ACADEMIA' THEN c_vols END),
                 avg(CASE WHEN acto IN ('DESFILE CB', 'ROMERIA CB', 'SS. EE. CB') THEN c_vols END),
@@ -245,7 +293,7 @@ class Informe(Conexion):
             WHERE
                 fecha BETWEEN %s AND %s
             GROUP BY MONTH(fecha)
-            ORDER BY fecha
+            ORDER BY MONTH(fecha)
         '''
         self.cursor.execute(_Query, _DateDifference)
         _Statistics = {'Mes': [],

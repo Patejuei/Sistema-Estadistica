@@ -1,8 +1,8 @@
 {
 
-"Host":"localhost",
-"User":"Ayudante",
-"Password":"Ayudante9BTobalaba",
+"Host":"localhost""aws.connect.psdb.cloud",
+"User":"Ayudante""wcecga1qyuazl3zodizx",
+"Password":"Ayudante9BTobalaba""pscale_pw_aPZfvfhgq0qXqS5w6ArBMlbKVKX4MoesSVLHvtLJq57",
 "DataBase":"asistencia_anual",
 "Nombre":"",
 "Cargo":"",

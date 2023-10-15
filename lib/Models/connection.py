@@ -3,8 +3,14 @@ import yagmail
 import os
 from dotenv import load_dotenv
 import datetime
-class Conexion:
 
+from mysql.connector import MySQLConnection
+from mysql.connector.cursor import MySQLCursor
+
+
+class Conexion:
+    connection : MySQLConnection
+    cursor : MySQLCursor
     def __init__(self):
         load_dotenv()
         self.connection = db.connect(
@@ -17,14 +23,6 @@ class Conexion:
         self.cursor = self.connection.cursor()
 
 
-
-
-    @staticmethod
-    def Filter_Date(date):
-        day, month, year = date.split("-")
-        date = datetime.date(int(year), int(month), int(day))
-        return date
-
     def srcVols(self, source):
         
         self.cursor.execute(f"SELECT reg_gral, nombre, apellidoP, apellidoM FROM bomberos WHERE reg_gral LIKE '{source}%'")
@@ -32,9 +30,7 @@ class Conexion:
         
         return _search
 
-
     def srcLista(self, srcLista):
-        
         self.cursor.execute(
             f'''SELECT
                     corr_cia, 
@@ -51,9 +47,11 @@ class Conexion:
         return _SrcResults
 
     def extVols(self, corrCia):
+        self.connection.connect()
         self.cursor.execute(
             f'SELECT reg_gral, nombre, apellidoP, apellidoM FROM bomberos b INNER JOIN asistencia a ON a.reg_gral_voluntario = b.reg_gral WHERE a.corr_cia_acto = "{corrCia}"')
         result = self.cursor.fetchall()
+        self.connection.close()
         return result
 
 
@@ -68,17 +66,16 @@ class Conexion:
     def getYear(self):
         
         years = [""]
-        self.cursor.execute("SELECT YEAR(fecha) FROM actos GROUP BY year(fecha) ORDER BY fecha")
+        self.cursor.execute("SELECT YEAR(fecha) FROM actos GROUP BY year(fecha)")
         for ye in self.cursor.fetchall():
             years.append(str(ye[0]))
         
         return years
 
-    def getActos(self, cCia):
-        
-        self.cursor.execute(f'SELECT acto, corr_gral, fecha, direccion, lista, unidad FROM actos WHERE corr_cia = "{cCia}"')
-        result = self.cursor.fetchall()[0]
-        
+    def getActos(self):
+        self.cursor.execute('SELECT corr_cia, acto, corr_gral, fecha, direccion, lista, unidad FROM actos ORDER BY fecha DESC, corr_cia DESC')
+        result = self.cursor.fetchall()
+        self.connection.close()
         return result
 
     def delLista(self, cCia):

@@ -1,7 +1,7 @@
 from lib.Models.connection import Conexion
 import datetime as dt
 
-class Licencia(Conexion):
+class Licencia:
     correlativoLicencia : str
     registroVoluntario : str
     fechaDesde : dt.date
@@ -9,7 +9,6 @@ class Licencia(Conexion):
     motivo : str
     estadoLicencia = str
     def __init__(self, cLic, regVol, fDesde, fHasta, motivo, estadoLicencia):
-        super().__init__()
         self.correlativoLicencia = cLic
         self.registroVoluntario = regVol
         self.fechaDesde = self.Filter_Date(fDesde)
@@ -41,18 +40,20 @@ class Licencia(Conexion):
 
     #Ingresar Nueva Licencia
     def nv_lic(self):
+        database = Conexion()
         cmd = '''
             INSERT INTO licencias
             VALUES
                 (%s, %s, %s, %s, %s, %s)
             '''
 
-        self.cursor.execute(cmd, self.values)
-        self.connection.commit()
-        self.connection.close()
+        database.cursor.execute(cmd, self.values)
+        database.connection.commit()
+        database.connection.close()
 
     # Actualizar Licencia
     def licenciaUpdate(self):
+        database = Conexion()
         query = '''
             UPDATE
                 licencias
@@ -65,7 +66,7 @@ class Licencia(Conexion):
             WHERE
                 corr_Lic = %s
         '''
-        self.cursor.execute(query, self.values)
-        self.connection.commit()
-        self.connection.close()
+        database.cursor.execute(query, self.values)
+        database.connection.commit()
+        database.connection.close()
 

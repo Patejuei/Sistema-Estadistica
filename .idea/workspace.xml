@@ -5,17 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a1b367fd-ac3e-419c-8787-6596d5d4418f" name="Changes" comment="feat: Agregar y refraccionar distintos modelos del programa">
-      <change afterPath="$PROJECT_DIR$/lib/Models/Licencias.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/Models/Acto.py" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Models/Acto.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/Models/Informe.py" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Models/Informe.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Models/Licencias.py" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Models/Licencias.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/Models/Voluntario.py" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Models/Voluntario.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/Models/connection.py" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Models/connection.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui_interface.py" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui_interface.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/programa.py" beforeDir="false" afterPath="$PROJECT_DIR$/programa.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/interface.ui" beforeDir="false" afterPath="$PROJECT_DIR$/resources/interface.ui" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -35,6 +31,19 @@
     </option>
   </component>
   <component name="Git.Settings">
+    <excluded-from-favorite>
+      <branch-storage>
+        <map>
+          <entry type="LOCAL">
+            <value>
+              <list>
+                <branch-info repo="$PROJECT_DIR$" source="master" />
+              </list>
+            </value>
+          </entry>
+        </map>
+      </branch-storage>
+    </excluded-from-favorite>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
@@ -238,7 +247,14 @@
       <workItem from="1692566961830" duration="263000" />
       <workItem from="1692736873972" duration="791000" />
       <workItem from="1693092445059" duration="1368000" />
-      <workItem from="1693263674721" duration="2651000" />
+      <workItem from="1693263674721" duration="3119000" />
+      <workItem from="1693346520011" duration="18000" />
+      <workItem from="1693641263930" duration="681000" />
+      <workItem from="1695607656806" duration="1103000" />
+      <workItem from="1695942128055" duration="284000" />
+      <workItem from="1695942441230" duration="2913000" />
+      <workItem from="1695966527588" duration="1616000" />
+      <workItem from="1696004935978" duration="1715000" />
     </task>
     <task id="LOCAL-00001" summary="Version 1.0.0.0">
       <created>1679892210217</created>
@@ -305,7 +321,15 @@
       <option name="project" value="LOCAL" />
       <updated>1689657630490</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="feat: Agregar y refraccionar distintos modelos del programa">
+      <option name="closed" value="true" />
+      <created>1693268308178</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1693268308178</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -335,18 +359,6 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/lib/Models/Acto.py</url>
-          <line>3</line>
-          <option name="timeStamp" value="3" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/lib/Models/Licencias.py</url>
-          <line>28</line>
-          <option name="timeStamp" value="6" />
-        </line-breakpoint>
-      </breakpoints>
       <default-breakpoints>
         <breakpoint type="python-exception">
           <properties notifyOnTerminate="true" exception="BaseException">
@@ -366,7 +378,7 @@
     <SUITE FILE_PATH="coverage/AyudantesAppGuiV2$Informe.coverage" NAME="Informe Coverage Results" MODIFIED="1688492334459" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/lib/Models" />
     <SUITE FILE_PATH="coverage/AyudantesAppGuiV2$connection.coverage" NAME="connection Coverage Results" MODIFIED="1681685491771" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/lib" />
     <SUITE FILE_PATH="coverage/AyudantesAppGuiV2$pruebas.coverage" NAME="pruebas Coverage Results" MODIFIED="1686019164639" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/lib" />
-    <SUITE FILE_PATH="coverage/AyudantesAppGuiV2$programa.coverage" NAME="programa Coverage Results" MODIFIED="1693265892794" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/AyudantesAppGuiV2$programa.coverage" NAME="programa Coverage Results" MODIFIED="1695968048174" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/AyudantesAppGuiV2$programa__1_.coverage" NAME="programa (1) Coverage Results" MODIFIED="1679889945711" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

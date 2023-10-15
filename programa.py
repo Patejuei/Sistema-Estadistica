@@ -62,6 +62,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                          'Rechazado': QtCore.Qt.CheckState.PartiallyChecked
                          } # Diccionario de estados para CHeckBox de UI de Gestión de licencias para lectura
 
+    actos : dict = {}
+    firefighters = []
+
     def __init__(self):
         super().__init__()
         self.setupUi(self)
@@ -79,8 +82,12 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         # Probar conexión a base de datos
         try:
             self.database = Conexion()
+            dbData = self.database.getActos()
+            for data in dbData:
+                self.actos[data[0]] = Acto(data[0], data[1], data[2], data[3], data[4], data[5], data[6])
+
         except Exception as e:
-            dialogo = QtWidgets.QMessageBox.warning(
+            QtWidgets.QMessageBox.warning(
                 self, "Error", f"Ha ocurrido un error conectandose a la base de datos.\n Código de error: {e}"
             )
         # Mostrar interfaz de ingreso
@@ -457,14 +464,13 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.lista.clear()
             fila = seleccion.indexes()[0].row()
             cCia = self.liListsView.model().index(fila, 0).data()
-            acto, cGral, fecha, direccion, lista, carros = self.database.getActos(cCia)
-            self.inpCorrGenEdit.setText(str(cGral))
-            self.cb_catAct.setCurrentText(self.filter_Act(acto))
+            self.inpCorrGenEdit.setText(str(self.actos[cCia].general_cor))
+            self.cb_catAct.setCurrentText(self.filter_Act(self.actos[cCia].act_type))
             self.setSubClassList(self.cb_catAct, self.cb_espAct)
-            self.cb_espAct.setCurrentText(acto)
-            self.inpDireccionEdit.setText(direccion)
-            self.inpFechaEdit.setDate(fecha)
-            self.cbEfectivaEdit.setCheckState(self.cb_efectiva_edit_estates[lista])
+            self.cb_espAct.setCurrentText(self.actos[cCia].act_type)
+            self.inpDireccionEdit.setText(self.actos[cCia].address)
+            self.inpFechaEdit.setDate(self.actos[cCia].date)
+            self.cbEfectivaEdit.setCheckState(self.cb_efectiva_edit_estates[self.actos[cCia].lista])
             self.clearTable(self.liVolsEdit)
             vols = self.database.extVols(cCia)
             for i in range(len(vols)):
@@ -474,20 +480,19 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 self.liVolsEdit.setItem(i, 1, QtWidgets.QTableWidgetItem(f'{nombre} {apellido1} {apellido2}'))
                 self.lista.add(rGral)
             self.lbl_cVolsEdit.setText(str(len(self.lista)))
-            self.set_carros(str(carros))
+            self.set_carros(self.actos[cCia].carros)
 
     def buscar_listas(self):
-        self.database.connection.connect()
+        rowIndex = 0
         self.clearTable(self.liListsView)
-        listas = self.database.srcLista(self.inpSearchList.text())
-        for i in range(len(listas)):
-            cCia, cGral, acto, direccion = listas[i]
-            self.liListsView.insertRow(i)
-            self.liListsView.setItem(i, 0, QtWidgets.QTableWidgetItem(cCia))
-            self.liListsView.setItem(i, 1, QtWidgets.QTableWidgetItem(str(cGral)))
-            self.liListsView.setItem(i, 2, QtWidgets.QTableWidgetItem(acto))
-            self.liListsView.setItem(i, 3, QtWidgets.QTableWidgetItem(direccion))
-
+        for acto in self.actos.values():
+            if (self.inpSearchList.text().upper() in acto.company_cor) or (self.inpSearchList.text().upper() in acto.address):
+                self.liListsView.insertRow(rowIndex)
+                self.liListsView.setItem(rowIndex, 0, QtWidgets.QTableWidgetItem(acto.company_cor))
+                self.liListsView.setItem(rowIndex, 1, QtWidgets.QTableWidgetItem(str(acto.date)))
+                self.liListsView.setItem(rowIndex, 2, QtWidgets.QTableWidgetItem(acto.act_type))
+                self.liListsView.setItem(rowIndex, 3, QtWidgets.QTableWidgetItem(acto.address))
+                rowIndex += 1
     def add_vol_to_list(self, input_vol):
         try:
             reg, nombre, apellido, apellido2 = self.database.addVolLista(input_vol)
@@ -559,7 +564,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             acto = Acto(self.inpCorrCia.text(), self.cb_actC2.currentText(), self.inpCorrGral.text(),
                         self.inpFecha.text(),
                         self.inpDireccion.text(), self.efectiva_estate_in[self.cbEfectiva.checkState().value],
-                        len(self.lista), self.lista, self.unidades_asistentes)
+                        self.unidades_asistentes)
+            acto.set_vols(self.lista)
+            acto.set_qty_vols()
             acto.addLista()
             aviso = QtWidgets.QMessageBox.information(self, "Guardar", "Lista guardada exitosamente")
             self.clearFields()

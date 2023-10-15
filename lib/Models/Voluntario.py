@@ -1,7 +1,7 @@
 from lib.Models.connection import Conexion
 import datetime
 
-class Voluntario(Conexion):
+class Voluntario:
     rGeneral : str
     rCia : int
     nombre : str
@@ -12,18 +12,22 @@ class Voluntario(Conexion):
     Sub_Estado : str
     rut : int
     dv : str
-    def __init__(self, rGeneral, rCia, nombre, apellidoP, apellidoM, crut, eMail, fIngreso, Sub_Estado):
-        super().__init__()
+    def __init__(self, rGeneral, rCia, nombre, apellidoP, apellidoM, eMail, fIngreso, Sub_Estado):
         self.rGeneral = rGeneral
         self.rCia = rCia
         self.nombre = nombre
         self.apellidoP = apellidoP
         self.apellidoM = apellidoM
         self.eMail = eMail
-        self.fIngreso = self.Filter_Date(fIngreso)
+        self.fIngreso = Conexion.Filter_Date(fIngreso)
         self.Sub_Estado = Sub_Estado
-        self.rut, self.dv = self.FilterRut(crut)
 
+    def set_fullRut(self, rut):
+        self.rut, self.dv = self.FilterRut(rut)
+
+    def set_divRut(self, rut, dv):
+        self.rut = rut
+        self.dv = dv
     @staticmethod
     def FilterRut(rut):
         if '-' in rut:
@@ -35,11 +39,14 @@ class Voluntario(Conexion):
             return 0, '0'
 
     def addVols(self):
+        database = Conexion()
         _values = (self.rGeneral, self.nombre, self.apellidoP, self.apellidoM, self.eMail, self.rut, self.dv, self.rCia, self.fIngreso, self.Sub_Estado)
-        self.cursor.execute('INSERT INTO bomberos VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)', _values)
-        self.connection.commit()
+        database.cursor.execute('INSERT INTO bomberos VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)', _values)
+        database.connection.commit()
+        database.connection.close()
 
     def editVol(self):
+        database = Conexion()
         _values = (self.rGeneral, self.nombre, self.apellidoP, self.apellidoM, self.eMail, self.rut, self.dv, self.rCia, self.fIngreso, self.Sub_Estado, self.rGeneral)
         _query = '''
         UPDATE bomberos 
@@ -56,7 +63,8 @@ class Voluntario(Conexion):
             sub_estado = %s 
         WHERE 
             reg_gral = %s'''
-        self.cursor.execute(_query, _values)
-        self.connection.commit()
+        database.cursor.execute(_query, _values)
+        database.connection.commit()
+        database.connection.close()
 
     #TODO: Implementar el calculo e ingreso de las suspenciones
